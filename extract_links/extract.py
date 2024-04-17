@@ -69,7 +69,7 @@ def crawl(url, max_urls=30):
     total_urls_visited += 1
     print(f"{YELLOW}[*] Crawling: {url}{RESET}")
     links = get_all_website_links(url)
-    for link in links:
+    for _ in links:
         if total_urls_visited > max_urls:
             break
     return internal_urls
