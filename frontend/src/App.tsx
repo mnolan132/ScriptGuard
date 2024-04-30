@@ -23,6 +23,8 @@ const App = () => {
     } else {
       setThreatDetected(true);
     }
+    let url: string = window.location.href;
+    console.log(url);
   };
 
   const bgColor = darkMode ? "#404258" : "#FBFAF5";
