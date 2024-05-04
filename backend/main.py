@@ -1,6 +1,6 @@
-import extract_links.extract as extract
-import xss_scan.xss_scan as xss
-import sql_injection_scan.sql_scan as sql
+import backend.extract as extract
+import backend.xss_scan as xss
+import backend.sql_scan as sql
 
 internal_urls = extract.crawl("https://www.thepythoncode.com", 30)
 
