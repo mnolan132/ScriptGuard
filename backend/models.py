@@ -5,9 +5,9 @@ class User(db.Model):
     first_name = db.Column(db.String(80), unique=False, nullable=False)
     last_name = db.Column(db.String(80), unique=False, nullable=False)
     email = db.Column(db.String(80), unique=False, nullable=False)
-    password = db.Column(db.String(80), nullable=False)
-    is_developer = db.Column(db.Bool, nullable=False)
-    darkmode_default = db.Column(db.Bool, nullable=False)
+    password = db.Column(db.String(80), unique=False, nullable=False)
+    is_developer = db.Column(db.String(10), nullable=False)
+    darkmode_default = db.Column(db.String(10), nullable=False)
 
     def to_json(self):
         return {
