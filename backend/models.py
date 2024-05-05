@@ -17,5 +17,4 @@ class User(db.Model):
             "email": self.email,
             "password": self.password,
             "isDeveloper": self.is_developer,
-            "darkmodeDefault": self.darkmode_default
         }
