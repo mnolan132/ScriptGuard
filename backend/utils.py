@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup as bs
 
+
+
 def get_all_forms(url):
     # this function returns all forms from HTML content
     soup = bs(requests.get(url).content, "html.parser")

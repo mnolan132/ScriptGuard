@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup as bs
 from urllib.parse import urljoin
 from pprint import pprint
-import utils.util_functions as util
+import utils as util
 
 # initialize an HTTP session & set the browser
 s = requests.session()

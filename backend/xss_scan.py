@@ -1,7 +1,7 @@
 import requests
 from pprint import pprint
 from urllib.parse import urljoin
-import utils.util_functions as util
+import utils as util
 
 
 def submit_form(form_details, url, value):
@@ -53,6 +53,3 @@ def scan_xss(url):
             # won't break because it is to print available vulnerable forms
     return is_vulnerable
 
-if __name__ == "__main__":
-    url = "https://xss-game.appspot.com/level1/frame"
-    print(scan_xss(url))

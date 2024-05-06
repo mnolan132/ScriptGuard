@@ -7,21 +7,36 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import User from "./User";
 
 interface SignUpProps {
   darkMode: boolean;
+  updateCallback: () => void;
 }
 
-const SignUp: React.FC<SignUpProps> = ({ darkMode }) => {
+const SignUp: React.FC<SignUpProps> = ({ darkMode, updateCallback }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const isDeveloper: boolean = false;
+  const [password, setPassword] = useState("");
+  const isDeveloper: string = "false";
 
-  const createNewUser = () => {
-    let user = new User(firstName, lastName, email, isDeveloper, darkMode);
-    document.cookie = "user=" + JSON.stringify(user);
+  const createNewUser = async (event: { preventDefault: () => void }) => {
+    event.preventDefault();
+    let data = { firstName, lastName, email, password, isDeveloper };
+    document.cookie = "user=" + JSON.stringify(data);
+    const url = "http://127.0.0.1:5000/create_user";
+    const options = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    };
+    const response = await fetch(url, options);
+    if (response.status !== 201 && response.status !== 200) {
+      const data = await response.json();
+      alert(data.message);
+    } else {
+      updateCallback();
+    }
   };
 
   return (
@@ -50,6 +65,13 @@ const SignUp: React.FC<SignUpProps> = ({ darkMode }) => {
               type="email"
               placeholder="Email"
               onChange={(event) => setEmail(event.currentTarget.value)}
+            />
+          </FormControl>
+          <FormControl>
+            <Input
+              type="password"
+              placeholder="Password"
+              onChange={(event) => setPassword(event.currentTarget.value)}
             />
           </FormControl>
           <Checkbox

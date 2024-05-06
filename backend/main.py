@@ -1,15 +1,33 @@
 from flask import request, jsonify
+from werkzeug.security import check_password_hash
 from config import app, db
 from models import User
-import extract as extract
-import xss_scan as xss
-import sql_scan as sql
+from xss_scan import scan_xss
+from sql_scan import scan_sql_injection
+from extract import crawl
+
+
 
 @app.route("/user", methods=["GET"])
 def get_user():
-    user = User.query.filter_by("email")
-    json_user = user.to_json()
-    return jsonify({"user": json_user})
+    auth = request.authorization
+    if not auth or not auth.username or not auth.password:
+        return jsonify({"error": "Authorization Required"}), 401
+    
+    user = User.query.filter_by(email=auth.username).first()
+    if not user or not check_password_hash(user.password, auth.password):
+        return jsonify({"error": "Invalid credentials"}), 401
+
+    return jsonify({
+        "id": user.id,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "email": user.email,
+        "is_developer": user.is_developer
+    })
+
+
+
 
 @app.route("/create_user", methods=["POST"])
 def create_new_user():
@@ -35,12 +53,36 @@ def create_new_user():
     
     return jsonify({"message": "User Created!"}), 201
 
+@app.route("/login", methods=["POST"])
+def login():
+    email = request.json.get("email")
+    password = request.json.get("password")
+
+    if not email or not password:
+        return jsonify({"error": "Email and password are required"}), 400
+
+    user = User.query.filter_by(email=email).first()
+
+    if not user or not check_password_hash(user.password, password):
+        return jsonify({"error": "Invalid email or password"}), 401
+
+    # If you want to use sessions:
+    # session["user_id"] = user.id
+
+    return jsonify({
+        "id": user.id,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "email": user.email,
+        "is_developer": user.is_developer
+    }), 200
+
 
 @app.route("/basic-scan", methods=["GET"])
 def basic_scan():
     url = request.json.get("url")
-    xss_scan_results = xss.scan_xss(url)
-    sql_injection_scan_results = sql.scan_sql_injection(url)
+    xss_scan_results = scan_xss(url)
+    sql_injection_scan_results = scan_sql_injection(url)
     return jsonify({"results": {
         "xss": xss_scan_results,
         "sql": sql_injection_scan_results
@@ -49,11 +91,11 @@ def basic_scan():
 @app.route("/deep-scan", methods=["GET"])
 def deep_scan():
     url = request.json.get("url")
-    internal_urls = extract.crawl(url)
+    internal_urls = crawl(url)
 
     for internal_url in internal_urls:
-        xss.scan_xss(internal_url)
-        sql.scan_sql_injection(internal_url)
+        scan_xss(internal_url)
+        scan_sql_injection(internal_url)
 
 if __name__ == "__main__":
     with app.app_context():
