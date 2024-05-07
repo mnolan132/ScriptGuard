@@ -82,7 +82,7 @@ def login():
     }), 200
 
 
-@app.route("/basic-scan", methods=["GET"])
+@app.route("/basic_scan", methods=["POST"])
 def basic_scan():
     url = request.json.get("url")
     xss_scan_results = scan_xss(url)
@@ -90,7 +90,7 @@ def basic_scan():
     return jsonify({"results": {
         "xss": xss_scan_results,
         "sql": sql_injection_scan_results
-    }})
+    }}), 200
 
 @app.route("/deep-scan", methods=["GET"])
 def deep_scan():

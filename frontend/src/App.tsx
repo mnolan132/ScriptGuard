@@ -47,7 +47,37 @@ const App = () => {
     setSessionCookie(cookie);
   };
 
-  const scan = () => {
+  const scan = async () => {
+    let url: string = "https://www.google.com";
+    const data = { url }; // Create an object with a property named 'url'
+    const options = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data), // Stringify the object containing the URL
+    };
+    try {
+      const response = await fetch("http://127.0.0.1:5000/basic_scan", options);
+      if (response.status !== 200) {
+        const responseData = await response.json();
+        alert(responseData.message);
+      } else {
+        console.log("it somehow worked!");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+
+    // let url: string = window.location.href;
+
+    // try {
+    //   const response = await axios.post(
+    //     "http://127.0.0.1:5000/basic-scan",
+    //     url
+    //   );
+    //   console.log(response);
+    // } catch (err: any) {
+    //   console.log(err);
+    // }
     setHasScanned(true);
     let num = Math.floor(Math.random() * 10);
     if (num % 2 === 0) {
@@ -55,7 +85,6 @@ const App = () => {
     } else {
       setThreatDetected(true);
     }
-    let url: string = window.location.href;
   };
 
   const bgColor = darkMode ? "#404258" : "#FBFAF5";
@@ -71,22 +100,20 @@ const App = () => {
         minH={"100px"}
       >
         {!sessionCookie ? (
-          <>
-            <Tabs variant="soft-rounded" colorScheme="green" h={"400px"}>
-              <TabList m={"10px"}>
-                <Tab mx={"5px"}>Log in</Tab>
-                <Tab mx={"5px"}>Sign up</Tab>
-              </TabList>
-              <TabPanels>
-                <TabPanel>
-                  <Login checkSession={checkSession} darkMode={darkMode} />
-                </TabPanel>
-                <TabPanel>
-                  <SignUp darkMode={darkMode} />
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
-          </>
+          <Tabs variant="soft-rounded" colorScheme="green" h={"400px"}>
+            <TabList m={"10px"}>
+              <Tab mx={"5px"}>Log in</Tab>
+              <Tab mx={"5px"}>Sign up</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <Login checkSession={checkSession} darkMode={darkMode} />
+              </TabPanel>
+              <TabPanel>
+                <SignUp darkMode={darkMode} />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
         ) : (
           <Scan hasScanned={hasScanned} scan={scan} />
         )}
