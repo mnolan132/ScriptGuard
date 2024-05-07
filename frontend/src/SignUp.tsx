@@ -5,25 +5,27 @@ import {
   FormControl,
   Input,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 
 interface SignUpProps {
   darkMode: boolean;
-  updateCallback: () => void;
 }
 
-const SignUp: React.FC<SignUpProps> = ({ darkMode, updateCallback }) => {
+const SignUp: React.FC<SignUpProps> = ({ darkMode }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const isDeveloper: string = "false";
 
+  const toast = useToast();
+
   const createNewUser = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
     let data = { firstName, lastName, email, password, isDeveloper };
-    document.cookie = "user=" + JSON.stringify(data);
+    document.cookie = "session=" + JSON.stringify(data);
     const url = "http://127.0.0.1:5000/create_user";
     const options = {
       method: "POST",
@@ -35,7 +37,13 @@ const SignUp: React.FC<SignUpProps> = ({ darkMode, updateCallback }) => {
       const data = await response.json();
       alert(data.message);
     } else {
-      updateCallback();
+      toast({
+        title: "Account Created",
+        description: "Your account has been created, please log in",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 

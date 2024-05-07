@@ -1,10 +1,11 @@
 from flask import request, jsonify
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from config import app, db
 from models import User
 from xss_scan import scan_xss
 from sql_scan import scan_sql_injection
 from extract import crawl
+import uuid
 
 
 
@@ -43,7 +44,11 @@ def create_new_user():
             400,
         )
     
-    new_user = User(first_name=first_name, last_name=last_name, email=email, password=password, is_developer=is_developer)
+    user_id = str(uuid.uuid4())
+    hashed_password = generate_password_hash(password)
+
+
+    new_user = User(id=user_id, first_name=first_name, last_name=last_name, email=email, password=hashed_password, is_developer=is_developer)
 
     try:
         db.session.add(new_user)
@@ -66,8 +71,7 @@ def login():
     if not user or not check_password_hash(user.password, password):
         return jsonify({"error": "Invalid email or password"}), 401
 
-    # If you want to use sessions:
-    # session["user_id"] = user.id
+   
 
     return jsonify({
         "id": user.id,

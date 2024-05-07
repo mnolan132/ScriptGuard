@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
-import { ChakraProvider, Box } from "@chakra-ui/react";
+import {
+  ChakraProvider,
+  Box,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+  TabPanel,
+} from "@chakra-ui/react";
 import Scan from "./Scan";
 import "./App.css";
 import ToggleDarkMode from "./ToggleDarkMode";
@@ -11,20 +19,32 @@ const App = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [threatDetected, setThreatDetected] = useState<null | boolean>(null);
   const [hasScanned, setHasScanned] = useState(false);
-  const [user, setUser] = useState();
+  const [sessionCookie, setSessionCookie] = useState<string | undefined>();
 
   useEffect(() => {
-    fetchUser();
+    checkSession();
+    checkDarkMode();
   }, []);
-
-  const fetchUser = async () => {
-    const response = await fetch("http://127.0.0.1:5000/user");
-    const data = await response.json();
-    setUser(data.user);
-  };
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
+  };
+
+  const checkDarkMode = () => {
+    if (
+      window &&
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    ) {
+      setDarkMode(true);
+    }
+  };
+
+  const checkSession = () => {
+    const cookie = document.cookie
+      .split(";")
+      .find((cookie) => cookie.trim().startsWith("session="));
+    setSessionCookie(cookie);
   };
 
   const scan = () => {
@@ -36,7 +56,6 @@ const App = () => {
       setThreatDetected(true);
     }
     let url: string = window.location.href;
-    console.log(url);
   };
 
   const bgColor = darkMode ? "#404258" : "#FBFAF5";
@@ -49,11 +68,24 @@ const App = () => {
         textColor={textColor}
         padding={"5px"}
         display={"flex"}
+        minH={"100px"}
       >
-        {document.cookie == "" ? (
+        {!sessionCookie ? (
           <>
-            <SignUp updateCallback={fetchUser} darkMode={darkMode} />
-            <Login />
+            <Tabs variant="soft-rounded" colorScheme="green" h={"400px"}>
+              <TabList m={"10px"}>
+                <Tab mx={"5px"}>Log in</Tab>
+                <Tab mx={"5px"}>Sign up</Tab>
+              </TabList>
+              <TabPanels>
+                <TabPanel>
+                  <Login checkSession={checkSession} darkMode={darkMode} />
+                </TabPanel>
+                <TabPanel>
+                  <SignUp darkMode={darkMode} />
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
           </>
         ) : (
           <Scan hasScanned={hasScanned} scan={scan} />
