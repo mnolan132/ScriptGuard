@@ -48,7 +48,7 @@ const App = () => {
   };
 
   const scan = async () => {
-    let url: string = "https://www.google.com";
+    let url: string = "https://sudo.co.il/xss/level1.php";
     const data = { url }; // Create an object with a property named 'url'
     const options = {
       method: "POST",
@@ -61,30 +61,20 @@ const App = () => {
         const responseData = await response.json();
         alert(responseData.message);
       } else {
-        console.log("it somehow worked!");
+        console.log(response.formData);
+        const responseData = await response.json();
+        setHasScanned(true);
+        if (responseData.xss && responseData.xss === "XSS threats detected") {
+          setThreatDetected(true);
+        } else {
+          setThreatDetected(false);
+        }
       }
     } catch (error) {
       console.error("Error:", error);
     }
 
     // let url: string = window.location.href;
-
-    // try {
-    //   const response = await axios.post(
-    //     "http://127.0.0.1:5000/basic-scan",
-    //     url
-    //   );
-    //   console.log(response);
-    // } catch (err: any) {
-    //   console.log(err);
-    // }
-    setHasScanned(true);
-    let num = Math.floor(Math.random() * 10);
-    if (num % 2 === 0) {
-      setThreatDetected(false);
-    } else {
-      setThreatDetected(true);
-    }
   };
 
   const bgColor = darkMode ? "#404258" : "#FBFAF5";

@@ -81,16 +81,35 @@ def login():
         "is_developer": user.is_developer
     }), 200
 
-
-@app.route("/basic_scan", methods=["POST"])
+@app.route("/basic_scan", methods=["POST", "OPTIONS"])
 def basic_scan():
-    url = request.json.get("url")
-    xss_scan_results = scan_xss(url)
-    sql_injection_scan_results = scan_sql_injection(url)
-    return jsonify({"results": {
-        "xss": xss_scan_results,
-        "sql": sql_injection_scan_results
-    }}), 200
+    if request.method == "OPTIONS":
+        # Handle CORS preflight request
+        response = jsonify({"message": "CORS preflight request successful"})
+        response.headers.add("Access-Control-Allow-Methods", "POST")
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type")
+        return response
+
+    if request.method == "POST":
+        url = request.json.get("url")
+        xss_scan_results = scan_xss(url)
+        # sql_injection_scan_results = scan_sql_injection(url)
+        return jsonify({
+            "message": "this function was successful",
+            "xss": xss_scan_results,
+            # "sql": sql_injection_scan_results
+        }), 200
+
+# @app.route("/basic_scan", methods=["POST"])
+# def basic_scan():
+#     url = request.json.get("url")
+#     xss_scan_results = scan_xss(url)
+#     # sql_injection_scan_results = scan_sql_injection(url)
+#     return jsonify({
+#         "message": "this function was successful",
+#         "xss": xss_scan_results,
+#         # "sql": sql_injection_scan_results
+#     }), 200
 
 @app.route("/deep-scan", methods=["GET"])
 def deep_scan():

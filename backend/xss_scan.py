@@ -31,25 +31,40 @@ def submit_form(form_details, url, value):
         # GET request
         return requests.get(target_url, params=data)
     
-def scan_xss(url):
-    # Given a 'url', it prints all XSS vunlerable forms and
-    # returns True if any is vulnerable, False otherwise
 
-    # get all forms from the URL
-    forms = util.get_all_forms(url)
-    print(f"[+] Detected {len(forms)} forms on {url}.")
-    js_script = "<Script>alert('hi')</scripT>"
-    # returning value
-    is_vulnerable = False
-    # iterate over all forms
-    for form in forms:
-        form_details = util.get_form_details(form)
-        content = submit_form(form_details, url, js_script).content.decode()
-        if js_script in content:
-            print(f"[+] XSS Detected on {url}")
-            print("[*] Form details:")
-            pprint(form_details)
-            is_vulnerable = True
-            # won't break because it is to print available vulnerable forms
-    return is_vulnerable
+def scan_xss(url):
+    encodings = ['utf-8', 'latin-1', 'ISO-8859-1']  # Add more encodings if needed
+    for encoding in encodings:
+        try:
+            response = requests.get(url)
+            content = response.content.decode(encoding, errors='ignore')
+            # Other processing steps...
+            # Given a 'url', it prints all XSS vunlerable forms and
+            # returns True if any is vulnerable, False otherwise
+
+            # get all forms from the URL
+            forms = util.get_all_forms(url)
+            print(f"[+] Detected {len(forms)} forms on {url}.")
+            js_script = "<Script>alert('hi')</scripT>"
+            # returning value
+            is_vulnerable = f"Scanned {len(forms)} and no XSS threats were detected"
+            # iterate over all forms
+            for form in forms:
+                form_details = util.get_form_details(form)
+                response = submit_form(form_details, url, js_script)
+                if response.status_code == 200:
+                    content = response.content.decode()
+                    if js_script in content:
+                        print(f"[+] XSS Detected on {url}")
+                        print("[*] Form details:")
+                        pprint(form_details)
+                        is_vulnerable = "XSS threats detected"
+                        # won't break because it is to print available vulnerable forms
+            return is_vulnerable
+        except UnicodeDecodeError:
+            continue  # Try the next encoding
+    # If none of the encodings worked, return None or handle the error as needed
+    return None
+
+    
 
