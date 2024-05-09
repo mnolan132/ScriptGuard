@@ -9,22 +9,19 @@ s = requests.session()
 s.headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36"
 
 def is_vulnerable(response):
-    # A simple boolean function that determines whether a page is SQL injection vulnerable from its response
     errors = {
         # MySQL
         "you have an error in your sql syntax;",
         "warning: mysql",
         # SQL Server
         "unclosed quotation mark after the character string",
-        #Oracle
+        # Oracle
         "quoted string not properly terminated",
     }
     for error in errors:
-        #if you find one of these errors, return True
         if error in response.content.decode().lower():
             return True
-        #no error detected
-        return False
+    return False
     
 def scan_sql_injection(url):
     # test on URL
@@ -37,8 +34,10 @@ def scan_sql_injection(url):
         if is_vulnerable(res):
             # SQL Injection detected on the URL itself, 
             # no need to preceed for extracting forms and submitting them
-            print("[+] SQL Injection vulnerability detected, link:", new_url)
-            return
+            print ("[+] SQL Injection vulnerability detected, link:", new_url)
+            return ("SQL Injection vulnerability detected")
+        else:
+            return ("No SQL Injection vulnerability detected")
     # test on HTML forms
     forms = util.get_all_forms(url)
     print(f"[+] Detected {len(forms)} forms on {url}.")
@@ -69,6 +68,9 @@ def scan_sql_injection(url):
                 print("[+] SQL Injection vulnerability detected, link:", url)
                 print("[+] Form:")
                 pprint(form_details)
-                break
+                return ("SQL Injection vulnerability detected")
+            else:
+                return ("No SQL Injection vulnerability detected")
+
                     
                          

@@ -15,6 +15,7 @@ import ScanResult from "./ScanResult";
 import SignUp from "./SignUp";
 import Login from "./Login";
 
+declare var chrome: any;
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [threatDetected, setThreatDetected] = useState<null | boolean>(null);
@@ -48,33 +49,53 @@ const App = () => {
   };
 
   const scan = async () => {
-    let url: string = "https://sudo.co.il/xss/level1.php";
-    const data = { url }; // Create an object with a property named 'url'
-    const options = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data), // Stringify the object containing the URL
-    };
-    try {
-      const response = await fetch("http://127.0.0.1:5000/basic_scan", options);
-      if (response.status !== 200) {
-        const responseData = await response.json();
-        alert(responseData.message);
-      } else {
-        console.log(response.formData);
-        const responseData = await response.json();
-        setHasScanned(true);
-        if (responseData.xss && responseData.xss === "XSS threats detected") {
-          setThreatDetected(true);
-        } else {
-          setThreatDetected(false);
+    chrome.tabs.query(
+      { active: true, currentWindow: true },
+      async function (tabs: { url: string }[]) {
+        const url = tabs[0].url;
+        const data = { url }; // Create an object with a property named 'url'
+        // Now you can use the 'data' object here or call a function passing 'data'
+        console.log(data);
+
+        const options = {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data), // Stringify the object containing the URL
+        };
+
+        try {
+          const response = await fetch(
+            "http://127.0.0.1:5000/basic_scan",
+            options
+          );
+          if (response.status !== 200) {
+            const responseData = await response.json();
+            alert(responseData.message);
+          } else {
+            console.log(response.formData);
+            const responseData = await response.json();
+            setHasScanned(true);
+            if (
+              (responseData.xss &&
+                responseData.xss === "XSS threats detected") ||
+              (responseData.sql &&
+                responseData.sql === "SQL Injection vulnerability detected")
+            ) {
+              setThreatDetected(true);
+            } else if (
+              (responseData.xss && responseData.xss !== null) ||
+              (responseData.sql && responseData.sql !== null)
+            ) {
+              setThreatDetected(false);
+            } else {
+              setThreatDetected(null);
+            }
+          }
+        } catch (error) {
+          console.error("Error:", error);
         }
       }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-
-    // let url: string = window.location.href;
+    );
   };
 
   const bgColor = darkMode ? "#404258" : "#FBFAF5";

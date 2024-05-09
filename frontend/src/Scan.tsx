@@ -1,4 +1,4 @@
-import { Text, Button, Flex, Box } from "@chakra-ui/react";
+import { Text, Button, Flex } from "@chakra-ui/react";
 
 interface ScanProps {
   scan: () => void;

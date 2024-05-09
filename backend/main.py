@@ -93,23 +93,14 @@ def basic_scan():
     if request.method == "POST":
         url = request.json.get("url")
         xss_scan_results = scan_xss(url)
-        # sql_injection_scan_results = scan_sql_injection(url)
+        sql_injection_scan_results = scan_sql_injection(url)
         return jsonify({
             "message": "this function was successful",
             "xss": xss_scan_results,
-            # "sql": sql_injection_scan_results
+            "sql": sql_injection_scan_results
         }), 200
 
-# @app.route("/basic_scan", methods=["POST"])
-# def basic_scan():
-#     url = request.json.get("url")
-#     xss_scan_results = scan_xss(url)
-#     # sql_injection_scan_results = scan_sql_injection(url)
-#     return jsonify({
-#         "message": "this function was successful",
-#         "xss": xss_scan_results,
-#         # "sql": sql_injection_scan_results
-#     }), 200
+
 
 @app.route("/deep-scan", methods=["GET"])
 def deep_scan():
