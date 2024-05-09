@@ -15,7 +15,7 @@ import ScanResult from "./ScanResult";
 import SignUp from "./SignUp";
 import Login from "./Login";
 
-declare var chrome: any;
+declare let chrome: any;
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [threatDetected, setThreatDetected] = useState<null | boolean>(null);

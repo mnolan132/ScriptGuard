@@ -18,7 +18,6 @@ const ScanResult: React.FC<ScanResultProps> = ({
 }) => {
   const safeMessage: string = "Safe from Injection Attacks!";
   const threatMessage: string = "Threats detected on this site!";
-  // const nullMessage: string = "Unable to scan the page, proceed with caution";
 
   return (
     <Box display={hasScanned ? "flex" : "none"} alignItems={"center"}>

@@ -81,7 +81,7 @@ def login():
         "is_developer": user.is_developer
     }), 200
 
-@app.route("/basic_scan", methods=["POST", "OPTIONS"])
+@app.route("/basic_scan", methods=["POST"])
 def basic_scan():
     if request.method == "OPTIONS":
         # Handle CORS preflight request
