@@ -15,15 +15,28 @@ import ScanResult from "./ScanResult";
 import SignUp from "./SignUp";
 import Login from "./Login";
 
+interface User {
+  email: string;
+  first_name: string;
+  id: string;
+  is_developer: string;
+  last_name: string;
+}
+
 declare let chrome: any;
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [threatDetected, setThreatDetected] = useState<null | boolean>(null);
   const [hasScanned, setHasScanned] = useState(false);
-  const [sessionCookie, setSessionCookie] = useState<string | undefined>();
+  const [sessionCookie, setSessionCookie] = useState<string>();
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     checkSession();
+    if (checkSession()) {
+      fetchUser();
+      console.log("running");
+    }
     checkDarkMode();
   }, []);
 
@@ -42,10 +55,20 @@ const App = () => {
   };
 
   const checkSession = () => {
-    const cookie = document.cookie
-      .split(";")
-      .find((cookie) => cookie.trim().startsWith("session="));
+    const cookie = document.cookie.substring(8);
     setSessionCookie(cookie);
+    if (sessionCookie !== undefined) {
+      return true;
+    }
+  };
+
+  const fetchUser = async () => {
+    const cleanSessionCookie = sessionCookie.replace(/^"|"$/g, ""); // Remove surrounding double quotes
+    const response = await fetch(
+      `http://127.0.0.1:5000/user/${cleanSessionCookie}`
+    );
+    const data = await response.json();
+    setUser(data);
   };
 
   const scan = async () => {
@@ -126,7 +149,12 @@ const App = () => {
             </TabPanels>
           </Tabs>
         ) : (
-          <Scan hasScanned={hasScanned} scan={scan} darkMode={darkMode} />
+          <Scan
+            hasScanned={hasScanned}
+            scan={scan}
+            darkMode={darkMode}
+            user={user}
+          />
         )}
         <ScanResult
           hasScanned={hasScanned}

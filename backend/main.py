@@ -9,15 +9,11 @@ import uuid
 
 
 
-@app.route("/user", methods=["GET"])
-def get_user():
-    auth = request.authorization
-    if not auth or not auth.username or not auth.password:
-        return jsonify({"error": "Authorization Required"}), 401
-    
-    user = User.query.filter_by(email=auth.username).first()
-    if not user or not check_password_hash(user.password, auth.password):
-        return jsonify({"error": "Invalid credentials"}), 401
+@app.route("/user/<string:user_id>", methods=["GET"])
+def get_user(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"message": "User not found"}), 404
 
     return jsonify({
         "id": user.id,
@@ -25,7 +21,7 @@ def get_user():
         "last_name": user.last_name,
         "email": user.email,
         "is_developer": user.is_developer
-    })
+    }), 200
 
 
 

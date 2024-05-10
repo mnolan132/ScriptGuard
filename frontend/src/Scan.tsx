@@ -11,13 +11,22 @@ import {
 } from "@chakra-ui/react";
 import { SettingsIcon } from "@chakra-ui/icons";
 
+interface User {
+  email: string;
+  first_name: string;
+  id: string;
+  is_developer: string;
+  last_name: string;
+}
+
 interface ScanProps {
   scan: () => void;
   hasScanned: boolean;
   darkMode: boolean;
+  user: User | null;
 }
 
-const Scan: React.FC<ScanProps> = ({ scan, hasScanned, darkMode }) => {
+const Scan: React.FC<ScanProps> = ({ scan, hasScanned, darkMode, user }) => {
   return (
     <Box>
       <Flex
@@ -58,9 +67,18 @@ const Scan: React.FC<ScanProps> = ({ scan, hasScanned, darkMode }) => {
           >
             <Text>Edit user settings</Text>
             <form>
-              <Input my={"5px"} placeholder="Edit first name" />
-              <Input my={"5px"} placeholder="Edit last name" />
-              <Input my={"5px"} placeholder="Edit email" />
+              <Input
+                my={"5px"}
+                placeholder={user && user.first_name ? user.first_name : ""}
+              />
+              <Input
+                my={"5px"}
+                placeholder={user && user.last_name ? user.last_name : ""}
+              />
+              <Input
+                my={"5px"}
+                placeholder={user && user.email ? user.email : ""}
+              />
               <Button
                 display={"flex"}
                 w={"160px"}
