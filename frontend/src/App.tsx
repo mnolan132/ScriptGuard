@@ -126,7 +126,7 @@ const App = () => {
             </TabPanels>
           </Tabs>
         ) : (
-          <Scan hasScanned={hasScanned} scan={scan} />
+          <Scan hasScanned={hasScanned} scan={scan} darkMode={darkMode} />
         )}
         <ScanResult
           hasScanned={hasScanned}
