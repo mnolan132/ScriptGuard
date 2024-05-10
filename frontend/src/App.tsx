@@ -28,14 +28,17 @@ const App = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [threatDetected, setThreatDetected] = useState<null | boolean>(null);
   const [hasScanned, setHasScanned] = useState(false);
-  const [sessionCookie, setSessionCookie] = useState<string>();
+  const [sessionCookie, setSessionCookie] = useState<string | undefined>(
+    document.cookie.substring(8)
+  );
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     checkSession();
-    if (checkSession()) {
+
+    if (sessionCookie) {
       fetchUser();
-      console.log("running");
+      console.log(user);
     }
     checkDarkMode();
   }, []);
@@ -57,18 +60,22 @@ const App = () => {
   const checkSession = () => {
     const cookie = document.cookie.substring(8);
     setSessionCookie(cookie);
-    if (sessionCookie !== undefined) {
-      return true;
-    }
+    return cookie !== undefined; // Return true if cookie is defined
   };
 
   const fetchUser = async () => {
+    if (!sessionCookie) {
+      // Handle case when sessionCookie is undefined
+      console.error("Session cookie is undefined");
+      return;
+    }
     const cleanSessionCookie = sessionCookie.replace(/^"|"$/g, ""); // Remove surrounding double quotes
     const response = await fetch(
       `http://127.0.0.1:5000/user/${cleanSessionCookie}`
     );
     const data = await response.json();
     setUser(data);
+    console.log("User data:", data);
   };
 
   const scan = async () => {
@@ -141,7 +148,11 @@ const App = () => {
             </TabList>
             <TabPanels>
               <TabPanel>
-                <Login checkSession={checkSession} darkMode={darkMode} />
+                <Login
+                  checkSession={checkSession}
+                  darkMode={darkMode}
+                  fetchUser={fetchUser}
+                />
               </TabPanel>
               <TabPanel>
                 <SignUp darkMode={darkMode} />

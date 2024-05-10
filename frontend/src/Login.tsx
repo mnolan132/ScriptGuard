@@ -12,9 +12,10 @@ import axios from "axios";
 interface LoginProps {
   darkMode: boolean;
   checkSession: () => void;
+  fetchUser: () => void;
 }
 
-const Login: React.FC<LoginProps> = ({ darkMode, checkSession }) => {
+const Login: React.FC<LoginProps> = ({ darkMode, checkSession, fetchUser }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -30,6 +31,7 @@ const Login: React.FC<LoginProps> = ({ darkMode, checkSession }) => {
       });
       document.cookie = "session=" + JSON.stringify(response.data.id);
       checkSession();
+      fetchUser();
       toast({
         title: "Login successful",
         description: "Welcome back!",
