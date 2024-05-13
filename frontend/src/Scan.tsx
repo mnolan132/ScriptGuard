@@ -10,6 +10,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { SettingsIcon } from "@chakra-ui/icons";
+import { useState } from "react";
 
 interface User {
   email: string;
@@ -24,9 +25,78 @@ interface ScanProps {
   hasScanned: boolean;
   darkMode: boolean;
   user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>; // Define setUser prop
 }
 
-const Scan: React.FC<ScanProps> = ({ scan, hasScanned, darkMode, user }) => {
+const Scan: React.FC<ScanProps> = ({
+  scan,
+  hasScanned,
+  darkMode,
+  user,
+  setUser,
+}) => {
+  const [formData, setFormData] = useState<User | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!formData || !user) return;
+
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:5000/update_user/${user.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      if (response.ok) {
+        console.log("User updated successfully");
+
+        // Fetch updated user data
+        const updatedUserData = await fetchUser(user.id);
+
+        // Update the 'user' state with the updated user data
+        setUser(updatedUserData);
+      } else {
+        console.error("Failed to update user");
+      }
+    } catch (error) {
+      console.error("Error updating user:", error);
+    }
+  };
+
+  // Function to fetch user data
+  const fetchUser = async (userId: string) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/user/${userId}`);
+      if (response.ok) {
+        const userData = await response.json();
+        return userData;
+      } else {
+        console.error("Failed to fetch user data");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      return null;
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(
+      (prevData: User | null) =>
+        ({
+          ...(prevData || {}), // Ensure prevData is not null
+          [name]: value || "", // Ensure value is always a string
+        } as User | null)
+    ); // Explicitly specify the return type
+  };
+
   return (
     <Box>
       <Flex
@@ -53,9 +123,6 @@ const Scan: React.FC<ScanProps> = ({ scan, hasScanned, darkMode, user }) => {
         <AccordionItem>
           <h2>
             <AccordionButton _expanded={{ bg: "#56F3FD" }}>
-              {/* <Box as="span" flex="1" textAlign="left">
-                Settings
-              </Box> */}
               <SettingsIcon />
             </AccordionButton>
           </h2>
@@ -66,18 +133,24 @@ const Scan: React.FC<ScanProps> = ({ scan, hasScanned, darkMode, user }) => {
             h={"250px"}
           >
             <Text>Edit user settings</Text>
-            <form>
+            <form onSubmit={handleSubmit}>
               <Input
+                name="first_name"
                 my={"5px"}
-                placeholder={user && user.first_name ? user.first_name : ""}
+                defaultValue={user?.first_name}
+                onChange={handleChange}
               />
               <Input
+                name="last_name"
                 my={"5px"}
-                placeholder={user && user.last_name ? user.last_name : ""}
+                defaultValue={user?.last_name}
+                onChange={handleChange}
               />
               <Input
+                name="email"
                 my={"5px"}
-                placeholder={user && user.email ? user.email : ""}
+                defaultValue={user?.email}
+                onChange={handleChange}
               />
               <Button
                 display={"flex"}

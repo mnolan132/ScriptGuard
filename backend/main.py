@@ -84,7 +84,7 @@ def update_user(user_id):
     user.is_developer = data.get("isDeveloper", user.is_developer)
 
     db.session.commit()
-    return jsonify({"message": "User updated"}), 200
+    return jsonify({"message": "User updated", }), 200
 
 @app.route("/basic_scan", methods=["POST"])
 def basic_scan():
@@ -106,7 +106,6 @@ def basic_scan():
         }), 200
 
 
-
 @app.route("/deep-scan", methods=["GET"])
 def deep_scan():
     url = request.json.get("url")
@@ -115,6 +114,7 @@ def deep_scan():
     for internal_url in internal_urls:
         scan_xss(internal_url)
         scan_sql_injection(internal_url)
+        
 
 if __name__ == "__main__":
     with app.app_context():

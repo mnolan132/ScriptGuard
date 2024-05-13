@@ -165,6 +165,7 @@ const App = () => {
             scan={scan}
             darkMode={darkMode}
             user={user}
+            setUser={setUser}
           />
         )}
 
