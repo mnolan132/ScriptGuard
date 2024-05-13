@@ -4,9 +4,13 @@ import {
   Flex,
   FormControl,
   Input,
+  InputGroup,
+  InputRightElement,
+  Stack,
   Text,
   useToast,
 } from "@chakra-ui/react";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 
 interface SignUpProps {
@@ -18,12 +22,34 @@ const SignUp: React.FC<SignUpProps> = ({ darkMode }) => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const isDeveloper: string = "false";
+  const [isDeveloper, setIsDeveloper] = useState("");
+  const [tempPassword, setTempPassword] = useState("");
+  const [isChecked, setIsChecked] = useState(false);
+  const [show, setShow] = useState(false);
+  // Hook to handle checkbox funcitonality
+
+  const showPassword = () => setShow(!show);
 
   const toast = useToast();
 
   const createNewUser = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
+    if (tempPassword !== password) {
+      toast({
+        title: "Confirmation password error",
+        description:
+          "Your password is invalid, please make sure you have entered a valid password and then try again",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
+    if (isChecked) {
+      setIsDeveloper("true");
+    } else {
+      setIsDeveloper("false");
+    }
     let data = { firstName, lastName, email, password, isDeveloper };
     document.cookie = "session=" + JSON.stringify(data);
     const url = "http://127.0.0.1:5000/create_user";
@@ -52,7 +78,7 @@ const SignUp: React.FC<SignUpProps> = ({ darkMode }) => {
       <form onSubmit={createNewUser}>
         <Flex
           m={"10px"}
-          h={"280px"}
+          h={"300px"}
           flexDirection={"column"}
           justifyContent={"space-between"}
         >
@@ -75,21 +101,73 @@ const SignUp: React.FC<SignUpProps> = ({ darkMode }) => {
               onChange={(event) => setEmail(event.currentTarget.value)}
             />
           </FormControl>
-          <FormControl>
-            <Input
-              type="password"
-              placeholder="Password"
-              onChange={(event) => setPassword(event.currentTarget.value)}
-            />
+          <Stack spacing={4}>
+            <InputGroup>
+              <FormControl>
+                <Input
+                  type={show ? "text" : "password"}
+                  placeholder="Password"
+                  onChange={(event) =>
+                    setTempPassword(event.currentTarget.value)
+                  }
+                />
+              </FormControl>
+              <InputRightElement pointerEvents="visible">
+                <Button
+                  size="sm"
+                  onClick={showPassword}
+                  m="3px"
+                  backgroundColor={!darkMode ? "whitesmoke" : "#404258"}
+                  _hover={{ bg: "none" }}
+                >
+                  {show ? (
+                    <ViewOffIcon color={darkMode ? "whitesmoke" : "#404258"} />
+                  ) : (
+                    <ViewIcon color={darkMode ? "whitesmoke" : "#404258"} />
+                  )}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
+          </Stack>
+          <Stack spacing={4}>
+            <InputGroup>
+              <FormControl>
+                <Input
+                  type={show ? "text" : "password"}
+                  placeholder="Confirm Password"
+                  onChange={(event) => setPassword(event.currentTarget.value)}
+                />
+              </FormControl>
+              <InputRightElement pointerEvents="visible">
+                <Button
+                  size="sm"
+                  onClick={showPassword}
+                  m="3px"
+                  backgroundColor={!darkMode ? "whitesmoke" : "#404258"}
+                  _hover={{ bg: "none" }}
+                >
+                  {show ? (
+                    <ViewOffIcon color={darkMode ? "whitesmoke" : "#404258"} />
+                  ) : (
+                    <ViewIcon color={darkMode ? "whitesmoke" : "#404258"} />
+                  )}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
+          </Stack>
+          <FormControl textAlign={"left"}>
+            <Flex>
+              <input
+                type="checkbox"
+                checked={isChecked}
+                onChange={() => {
+                  setIsChecked(!isChecked);
+                }}
+              ></input>
+              <Text mx={"5px"}>I am a developer</Text>
+            </Flex>
           </FormControl>
-          <Checkbox
-            id="isDeveloper"
-            // ref="isDeveloper"
-            // defaultChecked={isDeveloper}
-            // onChange={() => setIsDeveloper(!isDeveloper)}
-          >
-            <Text fontSize={"small"}>I am a developer</Text>
-          </Checkbox>
+
           <Button
             w={"160px"}
             border={"3px solid #56F3FD"}

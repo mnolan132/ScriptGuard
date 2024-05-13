@@ -6,8 +6,12 @@ import {
   FormErrorMessage,
   Flex,
   useToast,
+  InputRightElement,
+  InputGroup,
+  Stack,
 } from "@chakra-ui/react";
 import axios from "axios";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 interface LoginProps {
   darkMode: boolean;
@@ -19,6 +23,9 @@ const Login: React.FC<LoginProps> = ({ darkMode, checkSession, fetchUser }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [show, setShow] = useState(false);
+
+  const showPassword = () => setShow(!show);
 
   const toast = useToast();
 
@@ -68,14 +75,34 @@ const Login: React.FC<LoginProps> = ({ darkMode, checkSession, fetchUser }) => {
             onChange={(event) => setEmail(event.currentTarget.value)}
           />
         </FormControl>
-        <FormControl isRequired w="300px" m={"10px"}>
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(event) => setPassword(event.currentTarget.value)}
-          />
-        </FormControl>
+        <Stack spacing={4} w="300px" m="10px">
+          <InputGroup>
+            <FormControl isRequired>
+              <Input
+                type={show ? "text" : "password"}
+                placeholder="Password"
+                value={password}
+                onChange={(event) => setPassword(event.currentTarget.value)}
+              />
+            </FormControl>
+            <InputRightElement pointerEvents="visible">
+              <Button
+                size="sm"
+                onClick={showPassword}
+                m="3px"
+                backgroundColor={!darkMode ? "whitesmoke" : "#404258"}
+                _hover={{ bg: "none" }}
+              >
+                {show ? (
+                  <ViewOffIcon color={darkMode ? "whitesmoke" : "#404258"} />
+                ) : (
+                  <ViewIcon color={darkMode ? "whitesmoke" : "#404258"} />
+                )}
+              </Button>
+            </InputRightElement>
+          </InputGroup>
+        </Stack>
+
         {error && <FormErrorMessage>{error}</FormErrorMessage>}
         <Button
           m={"10px"}

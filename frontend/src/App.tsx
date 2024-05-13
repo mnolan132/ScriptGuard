@@ -8,6 +8,7 @@ import {
   TabPanels,
   TabPanel,
 } from "@chakra-ui/react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Scan from "./Scan";
 import "./App.css";
 import ToggleDarkMode from "./ToggleDarkMode";
@@ -133,47 +134,69 @@ const App = () => {
 
   return (
     <ChakraProvider>
-      <Box
-        backgroundColor={bgColor}
-        textColor={textColor}
-        padding={"5px"}
-        display={"flex"}
-        minH={"100px"}
-      >
-        {!sessionCookie ? (
-          <Tabs variant="soft-rounded" colorScheme="green" h={"400px"}>
-            <TabList m={"10px"}>
-              <Tab mx={"5px"}>Log in</Tab>
-              <Tab mx={"5px"}>Sign up</Tab>
-            </TabList>
-            <TabPanels>
-              <TabPanel>
-                <Login
-                  checkSession={checkSession}
+      <Router>
+        <Box
+          backgroundColor={bgColor}
+          textColor={textColor}
+          padding={"5px"}
+          display={"flex"}
+          minH={"100px"}
+        >
+          <Routes>
+            {!sessionCookie ? (
+              <Tabs variant="soft-rounded" colorScheme="green" h={"400px"}>
+                <TabList m={"10px"}>
+                  <Tab mx={"5px"}>Log in</Tab>
+                  <Tab mx={"5px"}>Sign up</Tab>
+                </TabList>
+                <TabPanels>
+                  <TabPanel>
+                    <Route
+                      path="/login"
+                      element={
+                        <Login
+                          checkSession={checkSession}
+                          darkMode={darkMode}
+                          fetchUser={fetchUser}
+                        />
+                      }
+                    />
+                  </TabPanel>
+                  <TabPanel>
+                    <Route
+                      path="/signup"
+                      element={<SignUp darkMode={darkMode} />}
+                    />
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
+            ) : (
+              <Route
+                path="/"
+                element={
+                  <Scan
+                    hasScanned={hasScanned}
+                    scan={scan}
+                    darkMode={darkMode}
+                    user={user}
+                  />
+                }
+              />
+            )}
+            <Route
+              path="/scan-result"
+              element={
+                <ScanResult
+                  hasScanned={hasScanned}
                   darkMode={darkMode}
-                  fetchUser={fetchUser}
+                  threatDetected={threatDetected}
                 />
-              </TabPanel>
-              <TabPanel>
-                <SignUp darkMode={darkMode} />
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-        ) : (
-          <Scan
-            hasScanned={hasScanned}
-            scan={scan}
-            darkMode={darkMode}
-            user={user}
-          />
-        )}
-        <ScanResult
-          hasScanned={hasScanned}
-          darkMode={darkMode}
-          threatDetected={threatDetected}
-        />
-        <ToggleDarkMode toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
-      </Box>
+              }
+            />
+          </Routes>
+          <ToggleDarkMode toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
+        </Box>
+      </Router>
     </ChakraProvider>
   );
 };
