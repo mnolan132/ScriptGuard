@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   ChakraProvider,
   Box,
@@ -8,7 +8,6 @@ import {
   TabPanels,
   TabPanel,
 } from "@chakra-ui/react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Scan from "./Scan";
 import "./App.css";
 import ToggleDarkMode from "./ToggleDarkMode";
