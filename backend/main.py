@@ -7,8 +7,6 @@ from sql_scan import scan_sql_injection
 from extract import crawl
 import uuid
 
-
-
 @app.route("/user/<string:user_id>", methods=["GET"])
 def get_user(user_id):
     user = User.query.get(user_id)
@@ -22,8 +20,6 @@ def get_user(user_id):
         "email": user.email,
         "is_developer": user.is_developer
     }), 200
-
-
 
 
 @app.route("/create_user", methods=["POST"])
@@ -42,7 +38,6 @@ def create_new_user():
     
     user_id = str(uuid.uuid4())
     hashed_password = generate_password_hash(password)
-
 
     new_user = User(id=user_id, first_name=first_name, last_name=last_name, email=email, password=hashed_password, is_developer=is_developer)
 
@@ -67,8 +62,6 @@ def login():
     if not user or not check_password_hash(user.password, password):
         return jsonify({"error": "Invalid email or password"}), 401
 
-   
-
     return jsonify({
         "id": user.id,
         "first_name": user.first_name,
@@ -76,6 +69,22 @@ def login():
         "email": user.email,
         "is_developer": user.is_developer
     }), 200
+
+@app.route("/update_user/<string:user_id>", methods=["PATCH"])
+def update_user(user_id):
+    user = User.query.get(user_id)
+
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+    
+    data = request.json
+    user.first_name = data.get("firstName", user.first_name)
+    user.last_name = data.get("lastName", user.last_name)
+    user.email = data.get("email", user.email)
+    user.is_developer = data.get("isDeveloper", user.is_developer)
+
+    db.session.commit()
+    return jsonify({"message": "User updated"}), 200
 
 @app.route("/basic_scan", methods=["POST"])
 def basic_scan():
