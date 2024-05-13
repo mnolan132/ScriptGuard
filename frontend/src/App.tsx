@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { Fragment, useState, useEffect } from "react";
 import {
   ChakraProvider,
   Box,
@@ -42,7 +42,7 @@ const App = () => {
       console.log(user);
     }
     checkDarkMode();
-  }, []);
+  }, [sessionCookie]);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -134,69 +134,49 @@ const App = () => {
 
   return (
     <ChakraProvider>
-      <Router>
-        <Box
-          backgroundColor={bgColor}
-          textColor={textColor}
-          padding={"5px"}
-          display={"flex"}
-          minH={"100px"}
-        >
-          <Routes>
-            {!sessionCookie ? (
-              <Tabs variant="soft-rounded" colorScheme="green" h={"400px"}>
-                <TabList m={"10px"}>
-                  <Tab mx={"5px"}>Log in</Tab>
-                  <Tab mx={"5px"}>Sign up</Tab>
-                </TabList>
-                <TabPanels>
-                  <TabPanel>
-                    <Route
-                      path="/login"
-                      element={
-                        <Login
-                          checkSession={checkSession}
-                          darkMode={darkMode}
-                          fetchUser={fetchUser}
-                        />
-                      }
-                    />
-                  </TabPanel>
-                  <TabPanel>
-                    <Route
-                      path="/signup"
-                      element={<SignUp darkMode={darkMode} />}
-                    />
-                  </TabPanel>
-                </TabPanels>
-              </Tabs>
-            ) : (
-              <Route
-                path="/"
-                element={
-                  <Scan
-                    hasScanned={hasScanned}
-                    scan={scan}
-                    darkMode={darkMode}
-                    user={user}
-                  />
-                }
-              />
-            )}
-            <Route
-              path="/scan-result"
-              element={
-                <ScanResult
-                  hasScanned={hasScanned}
+      <Box
+        backgroundColor={bgColor}
+        textColor={textColor}
+        padding={"5px"}
+        display={"flex"}
+        minH={"100px"}
+      >
+        {!sessionCookie ? (
+          <Tabs variant="soft-rounded" colorScheme="green" h={"400px"}>
+            <TabList m={"10px"}>
+              <Tab mx={"5px"}>Log in</Tab>
+              <Tab mx={"5px"}>Sign up</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <Login
+                  checkSession={checkSession}
                   darkMode={darkMode}
-                  threatDetected={threatDetected}
+                  fetchUser={fetchUser}
                 />
-              }
-            />
-          </Routes>
-          <ToggleDarkMode toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
-        </Box>
-      </Router>
+              </TabPanel>
+              <TabPanel>
+                <SignUp darkMode={darkMode} />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        ) : (
+          <Scan
+            hasScanned={hasScanned}
+            scan={scan}
+            darkMode={darkMode}
+            user={user}
+          />
+        )}
+
+        <ScanResult
+          hasScanned={hasScanned}
+          darkMode={darkMode}
+          threatDetected={threatDetected}
+        />
+
+        <ToggleDarkMode toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
+      </Box>
     </ChakraProvider>
   );
 };

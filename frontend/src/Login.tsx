@@ -39,6 +39,7 @@ const Login: React.FC<LoginProps> = ({ darkMode, checkSession, fetchUser }) => {
       document.cookie = "session=" + JSON.stringify(response.data.id);
       checkSession();
       fetchUser();
+      window.location.href = "http://localhost:5173/";
       toast({
         title: "Login successful",
         description: "Welcome back!",
