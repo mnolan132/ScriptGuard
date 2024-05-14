@@ -78,8 +78,8 @@ def update_user(user_id):
         return jsonify({"message": "User not found"}), 404
     
     data = request.json
-    user.first_name = data.get("firstName", user.first_name)
-    user.last_name = data.get("lastName", user.last_name)
+    user.first_name = data.get("first_name", user.first_name)
+    user.last_name = data.get("last_name", user.last_name)
     user.email = data.get("email", user.email)
     user.is_developer = data.get("isDeveloper", user.is_developer)
 
