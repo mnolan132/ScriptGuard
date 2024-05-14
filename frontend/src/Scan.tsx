@@ -195,6 +195,7 @@ const Scan: React.FC<ScanProps> = ({
                     toast({
                       title: "You have logged out, goodbye!",
                       status: "success",
+                      position: "top",
                       duration: 5000,
                       isClosable: true,
                     });

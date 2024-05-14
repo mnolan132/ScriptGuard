@@ -144,7 +144,11 @@ const App = () => {
             </TabList>
             <TabPanels>
               <TabPanel>
-                <Login darkMode={darkMode} fetchUser={fetchUser} />
+                <Login
+                  checkSession={checkSession}
+                  darkMode={darkMode}
+                  fetchUser={fetchUser}
+                />
               </TabPanel>
               <TabPanel>
                 <SignUp darkMode={darkMode} />

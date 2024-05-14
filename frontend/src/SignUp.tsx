@@ -39,6 +39,7 @@ const SignUp: React.FC<SignUpProps> = ({ darkMode }) => {
         description:
           "Your password is invalid, please make sure you have entered a valid password and then try again",
         status: "warning",
+        position: "top",
         duration: 5000,
         isClosable: true,
       });
@@ -66,6 +67,7 @@ const SignUp: React.FC<SignUpProps> = ({ darkMode }) => {
         title: "Account Created",
         description: "Your account has been created, please log in",
         status: "success",
+        position: "top",
         duration: 5000,
         isClosable: true,
       });
