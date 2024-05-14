@@ -8,6 +8,7 @@ import {
   Box,
   AccordionPanel,
   Input,
+  useToast,
 } from "@chakra-ui/react";
 import { SettingsIcon } from "@chakra-ui/icons";
 import { useState } from "react";
@@ -26,6 +27,7 @@ interface ScanProps {
   darkMode: boolean;
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>; // Define setUser prop
+  checkSession: () => boolean;
 }
 
 const Scan: React.FC<ScanProps> = ({
@@ -34,8 +36,11 @@ const Scan: React.FC<ScanProps> = ({
   darkMode,
   user,
   setUser,
+  checkSession,
 }) => {
   const [formData, setFormData] = useState<User | null>(null);
+
+  const toast = useToast();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -54,7 +59,12 @@ const Scan: React.FC<ScanProps> = ({
       );
 
       if (response.ok) {
-        console.log("User updated successfully");
+        toast({
+          title: "Update successful!",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
 
         // Fetch updated user data
         const updatedUserData = await fetchUser(user.id);
@@ -119,7 +129,7 @@ const Scan: React.FC<ScanProps> = ({
         </Button>
         <Text fontSize={"xl"}>Scan the site for vulnerabilities</Text>
       </Flex>
-      <Accordion allowToggle>
+      <Accordion allowToggle display={hasScanned ? "none" : "block"}>
         <AccordionItem>
           <h2>
             <AccordionButton _expanded={{ bg: "#56F3FD" }}>
@@ -130,7 +140,7 @@ const Scan: React.FC<ScanProps> = ({
             display={"flex"}
             flexDirection={"column"}
             textAlign={"left"}
-            h={"250px"}
+            h={"270px"}
           >
             <Text>Edit user settings</Text>
             <form onSubmit={handleSubmit}>
@@ -152,20 +162,47 @@ const Scan: React.FC<ScanProps> = ({
                 defaultValue={user?.email}
                 onChange={handleChange}
               />
-              <Button
-                display={"flex"}
-                w={"160px"}
-                my={"5px"}
-                border={"3px solid #56F3FD"}
-                variant={"outline"}
-                color={darkMode ? "whitesmoke" : "#404258"}
-                _hover={{
-                  background: darkMode ? "#09b5b5" : "#defcfc",
-                }}
-                type="submit"
-              >
-                Save Changes
-              </Button>
+              <Flex justifyContent={"space-between"} alignItems={"center"}>
+                <Button
+                  display={"flex"}
+                  w={"160px"}
+                  my={"5px"}
+                  border={"3px solid #56F3FD"}
+                  variant={"outline"}
+                  color={darkMode ? "whitesmoke" : "#404258"}
+                  _hover={{
+                    background: darkMode ? "#09b5b5" : "#defcfc",
+                  }}
+                  type="submit"
+                >
+                  Save Changes
+                </Button>
+                <Button
+                  display={"flex"}
+                  w={"160px"}
+                  my={"5px"}
+                  border={"3px solid #56F3FD"}
+                  variant={"outline"}
+                  color={darkMode ? "whitesmoke" : "#404258"}
+                  _hover={{
+                    background: darkMode ? "#ff0000" : "#ffbaba",
+                  }}
+                  onClick={() => {
+                    console.log("Clicked");
+                    document.cookie =
+                      "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                    checkSession();
+                    toast({
+                      title: "You have logged out, goodbye!",
+                      status: "success",
+                      duration: 5000,
+                      isClosable: true,
+                    });
+                  }}
+                >
+                  Log out
+                </Button>
+              </Flex>
             </form>
           </AccordionPanel>
         </AccordionItem>

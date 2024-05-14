@@ -15,11 +15,10 @@ import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 interface LoginProps {
   darkMode: boolean;
-  checkSession: () => void;
   fetchUser: () => void;
 }
 
-const Login: React.FC<LoginProps> = ({ darkMode, checkSession, fetchUser }) => {
+const Login: React.FC<LoginProps> = ({ darkMode, fetchUser }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -37,13 +36,13 @@ const Login: React.FC<LoginProps> = ({ darkMode, checkSession, fetchUser }) => {
         password,
       });
       document.cookie = "session=" + JSON.stringify(response.data.id);
-      checkSession();
       fetchUser();
       window.location.href = "http://localhost:5173/";
       toast({
         title: "Login successful",
         description: "Welcome back!",
         status: "success",
+        duration: 5000,
         isClosable: true,
       });
     } catch (err: any) {
@@ -53,6 +52,7 @@ const Login: React.FC<LoginProps> = ({ darkMode, checkSession, fetchUser }) => {
           title: "Warning",
           description: err.response.data.error,
           status: "error",
+          duration: 5000,
           isClosable: true,
         });
       } else {

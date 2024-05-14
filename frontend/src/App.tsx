@@ -35,11 +35,7 @@ const App = () => {
 
   useEffect(() => {
     checkSession();
-
-    if (sessionCookie) {
-      fetchUser();
-      console.log(user);
-    }
+    fetchUser();
     checkDarkMode();
   }, [sessionCookie]);
 
@@ -60,6 +56,7 @@ const App = () => {
   const checkSession = () => {
     const cookie = document.cookie.substring(8);
     setSessionCookie(cookie);
+
     return cookie !== undefined; // Return true if cookie is defined
   };
 
@@ -75,7 +72,6 @@ const App = () => {
     );
     const data = await response.json();
     setUser(data);
-    console.log("User data:", data);
   };
 
   const scan = async () => {
@@ -148,11 +144,7 @@ const App = () => {
             </TabList>
             <TabPanels>
               <TabPanel>
-                <Login
-                  checkSession={checkSession}
-                  darkMode={darkMode}
-                  fetchUser={fetchUser}
-                />
+                <Login darkMode={darkMode} fetchUser={fetchUser} />
               </TabPanel>
               <TabPanel>
                 <SignUp darkMode={darkMode} />
@@ -166,6 +158,7 @@ const App = () => {
             darkMode={darkMode}
             user={user}
             setUser={setUser}
+            checkSession={checkSession}
           />
         )}
 
