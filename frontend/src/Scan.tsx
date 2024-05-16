@@ -62,6 +62,7 @@ const Scan: React.FC<ScanProps> = ({
         toast({
           title: "Update successful!",
           status: "success",
+          position: "top",
           duration: 5000,
           isClosable: true,
         });
@@ -129,7 +130,7 @@ const Scan: React.FC<ScanProps> = ({
         </Button>
         <Text fontSize={"xl"}>Scan the site for vulnerabilities</Text>
       </Flex>
-      <Accordion allowToggle display={hasScanned ? "none" : "block"}>
+      <Accordion allowToggle display={hasScanned ? "none" : "flex"}>
         <AccordionItem>
           <h2>
             <AccordionButton _expanded={{ bg: "#56F3FD" }}>
