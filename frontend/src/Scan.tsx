@@ -130,10 +130,13 @@ const Scan: React.FC<ScanProps> = ({
         </Button>
         <Text fontSize={"xl"}>Scan the site for vulnerabilities</Text>
       </Flex>
-      <Accordion allowToggle display={hasScanned ? "none" : "flex"}>
+      <Accordion allowToggle display={hasScanned ? "none" : "block"}>
         <AccordionItem>
           <h2>
             <AccordionButton _expanded={{ bg: "#56F3FD" }}>
+              <Box as="span" flex="1" textAlign="left">
+                User Settings
+              </Box>
               <SettingsIcon />
             </AccordionButton>
           </h2>

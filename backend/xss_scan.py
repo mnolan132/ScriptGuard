@@ -33,12 +33,11 @@ def submit_form(form_details, url, value):
     
 
 def scan_xss(url):
-    encodings = ['utf-8', 'latin-1', 'ISO-8859-1']  # Add more encodings if needed
+    encodings = ['utf-8', 'latin-1', 'ISO-8859-1']  
     for encoding in encodings:
         try:
             response = requests.get(url)
             content = response.content.decode(encoding, errors='ignore')
-            # Other processing steps...
             # Given a 'url', it prints all XSS vunlerable forms and
             # returns True if any is vulnerable, False otherwise
 
