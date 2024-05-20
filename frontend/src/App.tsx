@@ -23,6 +23,10 @@ interface User {
   last_name: string;
 }
 
+interface VulnerabilityReport {
+  [key: string]: string;
+}
+
 declare let chrome: any;
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -32,6 +36,8 @@ const App = () => {
     document.cookie.substring(8)
   );
   const [user, setUser] = useState<User | null>(null);
+  const [vulnerabilityReport, setVulnerabilityReport] =
+    useState<VulnerabilityReport>({});
 
   useEffect(() => {
     checkSession();
@@ -79,9 +85,7 @@ const App = () => {
       { active: true, currentWindow: true },
       async function (tabs: { url: string }[]) {
         const url = tabs[0].url;
-        const data = { url }; // Create an object with a property named 'url'
-        // Now you can use the 'data' object here or call a function passing 'data'
-        console.log(data);
+        const data = { url };
 
         const options = {
           method: "POST",
@@ -100,6 +104,8 @@ const App = () => {
           } else {
             console.log(response.formData);
             const responseData = await response.json();
+            setVulnerabilityReport(responseData);
+            console.log(responseData.message);
             setHasScanned(true);
             if (
               (responseData.xss &&
@@ -170,6 +176,7 @@ const App = () => {
           hasScanned={hasScanned}
           darkMode={darkMode}
           threatDetected={threatDetected}
+          vulnerabilityReport={vulnerabilityReport}
         />
 
         <ToggleDarkMode toggleDarkMode={toggleDarkMode} darkMode={darkMode} />

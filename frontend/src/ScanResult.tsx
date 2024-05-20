@@ -13,16 +13,22 @@ import {
   faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
 
+interface VulnerabilityReport {
+  [key: string]: string;
+}
+
 interface ScanResultProps {
   threatDetected: null | boolean;
   darkMode: boolean;
   hasScanned: boolean;
+  vulnerabilityReport: VulnerabilityReport;
 }
 
 const ScanResult: React.FC<ScanResultProps> = ({
   threatDetected,
   darkMode,
   hasScanned,
+  vulnerabilityReport,
 }) => {
   const safeMessage: string = "Safe from Injection Attacks!";
   const threatMessage: string = "Threats detected on this site!";
@@ -65,7 +71,27 @@ const ScanResult: React.FC<ScanResultProps> = ({
             </AccordionButton>
           </h2>
           <AccordionPanel pb={4}>
-            This is an example of the accordion report
+            <Box textAlign={"left"}>
+              {Object.keys(vulnerabilityReport).map((key, i) => (
+                <>
+                  <Text as="b" fontSize="large" key={i}>
+                    {key.charAt(0).toUpperCase() + key.slice(1)}
+                  </Text>
+                  <Text fontSize={"medium"}>
+                    {vulnerabilityReport[key].charAt(0).toUpperCase() +
+                      vulnerabilityReport[key].slice(1) +
+                      "."}
+                  </Text>
+                </>
+              ))}
+            </Box>
+            <Text mt="10px" textAlign={"left"} fontSize={"medium"}>
+              Based on the results of our scan, we cannot recommend sharing any
+              personal information with this site. The scan revealed
+              vulnerabilities that could be exploited, putting any information
+              you provide at risk of being leaked to malicious actors. Please
+              exercise caution when sharing information with this platform.
+            </Text>
           </AccordionPanel>
         </AccordionItem>
       </Accordion>
