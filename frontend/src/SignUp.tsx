@@ -21,7 +21,7 @@ const SignUp: React.FC<SignUpProps> = ({ darkMode }) => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isDeveloper, setIsDeveloper] = useState("");
+  const [isDeveloper, setIsDeveloper] = useState("false");
   const [tempPassword, setTempPassword] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [show, setShow] = useState(false);
@@ -47,8 +47,6 @@ const SignUp: React.FC<SignUpProps> = ({ darkMode }) => {
     }
     if (isChecked) {
       setIsDeveloper("true");
-    } else {
-      setIsDeveloper("false");
     }
     let data = { firstName, lastName, email, password, isDeveloper };
     document.cookie = "session=" + JSON.stringify(data);

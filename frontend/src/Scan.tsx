@@ -9,6 +9,14 @@ import {
   AccordionPanel,
   Input,
   useToast,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalBody,
+  ModalCloseButton,
+  ModalFooter,
+  ModalHeader,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { SettingsIcon } from "@chakra-ui/icons";
 import { useState } from "react";
@@ -39,6 +47,7 @@ const Scan: React.FC<ScanProps> = ({
   checkSession,
 }) => {
   const [formData, setFormData] = useState<User | null>(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const toast = useToast();
 
@@ -108,6 +117,33 @@ const Scan: React.FC<ScanProps> = ({
     ); // Explicitly specify the return type
   };
 
+  const deleteUser = async (userId: string | undefined) => {
+    try {
+      const options = {
+        method: "DELETE",
+      };
+      const response = await fetch(
+        `http://127.0.0.1:5000/delete_user/${userId}`,
+        options
+      );
+      if (response.status === 200) {
+        document.cookie =
+          "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        checkSession();
+      } else {
+        console.error("Failed to delete");
+      }
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  const handleDeleteClick =
+    (userId: string | undefined) =>
+    (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      deleteUser(userId);
+    };
+
   return (
     <Box>
       <Flex
@@ -144,7 +180,7 @@ const Scan: React.FC<ScanProps> = ({
             display={"flex"}
             flexDirection={"column"}
             textAlign={"left"}
-            h={"270px"}
+            h={"290px"}
           >
             <Text>Edit user settings</Text>
             <form onSubmit={handleSubmit}>
@@ -208,10 +244,38 @@ const Scan: React.FC<ScanProps> = ({
                   Log out
                 </Button>
               </Flex>
+              <Button colorScheme="red" w={"160px"} my={"5px"} onClick={onOpen}>
+                Delete Account
+              </Button>
             </form>
           </AccordionPanel>
         </AccordionItem>
       </Accordion>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>DELETING ACCOUNT</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text>
+              Are you sure you wish to permanantlty delete this account?
+            </Text>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button
+              colorScheme="red"
+              mr={3}
+              onClick={handleDeleteClick(user ? user.id : undefined)}
+            >
+              Delete
+            </Button>
+            <Button variant="ghost" onClick={onClose}>
+              Cancel
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };

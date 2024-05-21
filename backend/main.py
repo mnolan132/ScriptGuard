@@ -86,6 +86,18 @@ def update_user(user_id):
     db.session.commit()
     return jsonify({"message": "User updated", }), 200
 
+@app.route("/delete_user/<string:user_id>", methods=["DELETE"])
+def delete_user(user_id):
+    user = User.query.get(user_id)
+
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+
+    db.session.delete(user)
+    db.session.commit()
+
+    return jsonify({"message": "User deleted!"}), 200
+
 @app.route("/basic_scan", methods=["POST"])
 def basic_scan():
     if request.method == "OPTIONS":
