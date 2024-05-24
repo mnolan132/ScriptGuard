@@ -14,14 +14,7 @@ import ToggleDarkMode from "./ToggleDarkMode";
 import ScanResult from "./ScanResult";
 import SignUp from "./SignUp";
 import Login from "./Login";
-
-interface User {
-  email: string;
-  first_name: string;
-  id: string;
-  is_developer: string;
-  last_name: string;
-}
+import { User } from "./User.ts";
 
 interface VulnerabilityReport {
   [key: string]: string;
@@ -39,12 +32,23 @@ const App = () => {
   const [vulnerabilityReport, setVulnerabilityReport] =
     useState<VulnerabilityReport>({});
 
+  // useEffect(() => {
+  //   fetchUser();
+  //   checkSession();
+  //   fetchUser();
+  //   checkDarkMode();
+  // }, [sessionCookie]);
+
   useEffect(() => {
-    fetchUser();
-    checkSession();
-    fetchUser();
+    if (sessionCookie) {
+      fetchUser();
+    }
     checkDarkMode();
   }, [sessionCookie]);
+
+  useEffect(() => {
+    console.log("User state updated:", user); // Log user state changes
+  }, [user]);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -69,20 +73,32 @@ const App = () => {
 
   const fetchUser = async () => {
     if (!sessionCookie) {
-      // Handle case when sessionCookie is undefined
       console.info("Session cookie is undefined");
       return;
     }
     const cleanSessionCookie = sessionCookie.replace(/^"|"$/g, ""); // Remove surrounding double quotes
-    const response = await fetch(
-      `http://127.0.0.1:5000/user/${cleanSessionCookie}`
-    );
-    // const data = await response.json();
-    setUser(await response.json());
-    console.log(user);
-    // console.log(data);
-    if (user === null) {
-      console.error("user info not being set ");
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:5000/user/${cleanSessionCookie}`
+      );
+      if (!response.ok) {
+        console.error("Failed to fetch user data");
+        return;
+      }
+      const data = await response.json();
+      console.log("Fetched user data:", data); // Log the fetched data
+      const userInstance = new User(
+        data.email,
+        data.first_name,
+        data.id,
+        data.is_developer,
+        data.last_name
+      );
+      setUser(userInstance);
+      console.log("User instance created:", userInstance); // Log the user instance
+      console.log("Log state user variable: " + user);
+    } catch (error) {
+      console.error("An error occurred while fetching user data", error);
     }
   };
 
