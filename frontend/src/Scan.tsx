@@ -138,11 +138,9 @@ const Scan: React.FC<ScanProps> = ({
     }
   };
 
-  const handleDeleteClick =
-    (userId: string | undefined) =>
-    (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      deleteUser(userId);
-    };
+  const handleDeleteClick = (userId: string | undefined) => {
+    deleteUser(userId);
+  };
 
   return (
     <Box>
@@ -266,7 +264,7 @@ const Scan: React.FC<ScanProps> = ({
             <Button
               colorScheme="red"
               mr={3}
-              onClick={handleDeleteClick(user ? user.id : undefined)}
+              onClick={() => handleDeleteClick(user ? user.id : undefined)}
             >
               Delete
             </Button>

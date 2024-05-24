@@ -40,6 +40,7 @@ const App = () => {
     useState<VulnerabilityReport>({});
 
   useEffect(() => {
+    fetchUser();
     checkSession();
     fetchUser();
     checkDarkMode();
@@ -69,15 +70,20 @@ const App = () => {
   const fetchUser = async () => {
     if (!sessionCookie) {
       // Handle case when sessionCookie is undefined
-      console.error("Session cookie is undefined");
+      console.info("Session cookie is undefined");
       return;
     }
     const cleanSessionCookie = sessionCookie.replace(/^"|"$/g, ""); // Remove surrounding double quotes
     const response = await fetch(
       `http://127.0.0.1:5000/user/${cleanSessionCookie}`
     );
-    const data = await response.json();
-    setUser(data);
+    // const data = await response.json();
+    setUser(await response.json());
+    console.log(user);
+    // console.log(data);
+    if (user === null) {
+      console.error("user info not being set ");
+    }
   };
 
   const scan = async () => {
@@ -177,6 +183,7 @@ const App = () => {
           darkMode={darkMode}
           threatDetected={threatDetected}
           vulnerabilityReport={vulnerabilityReport}
+          user={user}
         />
 
         <ToggleDarkMode toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
