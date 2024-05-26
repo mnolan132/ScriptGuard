@@ -10,7 +10,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface SignUpProps {
   darkMode: boolean;
@@ -21,7 +21,6 @@ const SignUp: React.FC<SignUpProps> = ({ darkMode }) => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isDeveloper, setIsDeveloper] = useState("false");
   const [tempPassword, setTempPassword] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [show, setShow] = useState(false);
@@ -44,7 +43,6 @@ const SignUp: React.FC<SignUpProps> = ({ darkMode }) => {
       return;
     }
     const developerStatus = isChecked ? "true" : "false";
-    setIsDeveloper(developerStatus);
 
     const data = {
       firstName,

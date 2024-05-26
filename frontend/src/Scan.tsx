@@ -144,26 +144,49 @@ const Scan: React.FC<ScanProps> = ({
 
   return (
     <Box>
-      <Flex
-        display={hasScanned ? "none" : "flex"}
-        flexDirection={"row"}
-        alignItems={"center"}
-        justifyContent={"center"}
-        m="5px"
-      >
-        <Button
-          w={"80px"}
-          h={"80px"}
-          borderRadius={80}
-          mx={5}
-          color={"#FFFFFF"}
-          bgColor="#6AE71E"
-          onClick={scan}
+      <Box display={hasScanned ? "none" : "block"}>
+        <Flex
+          flexDirection={"row"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          m="5px"
         >
-          SCAN
-        </Button>
-        <Text fontSize={"xl"}>Scan the site for vulnerabilities</Text>
-      </Flex>
+          <Button
+            minW={"110px"}
+            h={"40px"}
+            borderRadius={10}
+            mx={5}
+            color={"#FFFFFF"}
+            bgColor="#6AE71E"
+            onClick={scan}
+            _hover={{ color: "#404258" }}
+          >
+            SCAN
+          </Button>
+          <Text fontSize={"xl"}>Scan the page for vulnerabilities</Text>
+        </Flex>
+        <Flex
+          display={user?.is_developer === "false" ? "none" : "flex"}
+          flexDirection={"row"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          m="5px"
+        >
+          <Button
+            minW={"110px"}
+            h={"40px"}
+            borderRadius={10}
+            mx={5}
+            color={"#FFFFFF"}
+            bgColor="#924dbf"
+            onClick={scan}
+            _hover={{ color: "#404258" }}
+          >
+            DEEP SCAN
+          </Button>
+          <Text fontSize={"xl"}>Scan the whole site for vulnerabilities</Text>
+        </Flex>
+      </Box>
       <Accordion allowToggle display={hasScanned ? "none" : "block"}>
         <AccordionItem>
           <h2>
@@ -229,6 +252,7 @@ const Scan: React.FC<ScanProps> = ({
                     console.log("Clicked");
                     document.cookie =
                       "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
                     checkSession();
                     toast({
                       title: "You have logged out, goodbye!",
