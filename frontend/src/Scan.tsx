@@ -20,6 +20,8 @@ import {
 } from "@chakra-ui/react";
 import { SettingsIcon } from "@chakra-ui/icons";
 import { useState } from "react";
+import ScanBtn from "./ScanBtn";
+import SettingsBtn from "./SettingsBtn";
 
 interface User {
   email: string;
@@ -34,14 +36,13 @@ interface ScanProps {
   hasScanned: boolean;
   darkMode: boolean;
   user: User | null;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>; // Define setUser prop
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
   checkSession: () => boolean;
 }
 
 const Scan: React.FC<ScanProps> = ({
   scan,
   hasScanned,
-  darkMode,
   user,
   setUser,
   checkSession,
@@ -151,18 +152,11 @@ const Scan: React.FC<ScanProps> = ({
           justifyContent={"center"}
           m="5px"
         >
-          <Button
-            minW={"110px"}
-            h={"40px"}
-            borderRadius={10}
-            mx={5}
-            color={"#FFFFFF"}
-            bgColor="#6AE71E"
-            onClick={scan}
-            _hover={{ color: "#404258" }}
-          >
-            SCAN
-          </Button>
+          <ScanBtn
+            backgroundColor="#6AE71E"
+            buttonLabelText="SCAN"
+            clickFunction={scan}
+          />
           <Text fontSize={"xl"}>Scan the page for vulnerabilities</Text>
         </Flex>
         <Flex
@@ -172,18 +166,12 @@ const Scan: React.FC<ScanProps> = ({
           justifyContent={"center"}
           m="5px"
         >
-          <Button
-            minW={"110px"}
-            h={"40px"}
-            borderRadius={10}
-            mx={5}
-            color={"#FFFFFF"}
-            bgColor="#924dbf"
-            onClick={scan}
-            _hover={{ color: "#404258" }}
-          >
-            DEEP SCAN
-          </Button>
+          <ScanBtn
+            backgroundColor="#924dbf"
+            buttonLabelText="Deep Scan"
+            clickFunction={scan}
+          />
+
           <Text fontSize={"xl"}>Scan the whole site for vulnerabilities</Text>
         </Flex>
       </Box>
@@ -224,31 +212,16 @@ const Scan: React.FC<ScanProps> = ({
                 onChange={handleChange}
               />
               <Flex justifyContent={"space-between"} alignItems={"center"}>
-                <Button
-                  display={"flex"}
-                  w={"160px"}
-                  my={"5px"}
-                  border={"3px solid #56F3FD"}
-                  variant={"outline"}
-                  color={darkMode ? "whitesmoke" : "#404258"}
-                  _hover={{
-                    background: darkMode ? "#09b5b5" : "#defcfc",
-                  }}
+                <SettingsBtn
                   type="submit"
-                >
-                  Save Changes
-                </Button>
-                <Button
-                  display={"flex"}
-                  w={"160px"}
-                  my={"5px"}
-                  border={"3px solid #56F3FD"}
-                  variant={"outline"}
-                  color={darkMode ? "whitesmoke" : "#404258"}
-                  _hover={{
-                    background: darkMode ? "#ff0000" : "#ffbaba",
-                  }}
-                  onClick={() => {
+                  buttonTheme="green"
+                  buttonLabelText="Save Changes"
+                />
+
+                <SettingsBtn
+                  buttonTheme="orange"
+                  buttonLabelText="Log Out"
+                  buttonClickFunction={() => {
                     console.log("Clicked");
                     document.cookie =
                       "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -262,13 +235,14 @@ const Scan: React.FC<ScanProps> = ({
                       isClosable: true,
                     });
                   }}
-                >
-                  Log out
-                </Button>
+                />
               </Flex>
-              <Button colorScheme="red" w={"160px"} my={"5px"} onClick={onOpen}>
-                Delete Account
-              </Button>
+
+              <SettingsBtn
+                buttonTheme="red"
+                buttonLabelText="Delete Account"
+                buttonClickFunction={onOpen}
+              />
             </form>
           </AccordionPanel>
         </AccordionItem>
