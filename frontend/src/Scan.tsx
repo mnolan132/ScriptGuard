@@ -20,8 +20,7 @@ import {
 } from "@chakra-ui/react";
 import { SettingsIcon } from "@chakra-ui/icons";
 import { useState } from "react";
-import ScanBtn from "./ScanBtn";
-import SettingsBtn from "./SettingsBtn";
+import BtnComponent from "./BtnComponent";
 
 interface User {
   email: string;
@@ -152,10 +151,10 @@ const Scan: React.FC<ScanProps> = ({
           justifyContent={"center"}
           m="5px"
         >
-          <ScanBtn
-            backgroundColor="#6AE71E"
+          <BtnComponent
+            buttonTheme="teal"
             buttonLabelText="SCAN"
-            clickFunction={scan}
+            buttonClickFunction={scan}
           />
           <Text fontSize={"xl"}>Scan the page for vulnerabilities</Text>
         </Flex>
@@ -166,10 +165,10 @@ const Scan: React.FC<ScanProps> = ({
           justifyContent={"center"}
           m="5px"
         >
-          <ScanBtn
-            backgroundColor="#924dbf"
+          <BtnComponent
+            buttonTheme="purple"
             buttonLabelText="Deep Scan"
-            clickFunction={scan}
+            buttonClickFunction={scan}
           />
 
           <Text fontSize={"xl"}>Scan the whole site for vulnerabilities</Text>
@@ -212,13 +211,13 @@ const Scan: React.FC<ScanProps> = ({
                 onChange={handleChange}
               />
               <Flex justifyContent={"space-between"} alignItems={"center"}>
-                <SettingsBtn
+                <BtnComponent
                   type="submit"
                   buttonTheme="green"
                   buttonLabelText="Save Changes"
                 />
 
-                <SettingsBtn
+                <BtnComponent
                   buttonTheme="orange"
                   buttonLabelText="Log Out"
                   buttonClickFunction={() => {
@@ -238,7 +237,7 @@ const Scan: React.FC<ScanProps> = ({
                 />
               </Flex>
 
-              <SettingsBtn
+              <BtnComponent
                 buttonTheme="red"
                 buttonLabelText="Delete Account"
                 buttonClickFunction={onOpen}

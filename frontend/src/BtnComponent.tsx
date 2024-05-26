@@ -1,14 +1,14 @@
 import React from "react";
 import { Button } from "@chakra-ui/react";
 
-interface SettingsBtnProps {
+interface BtnComponentProps {
   type?: "button" | "submit" | "reset";
   buttonTheme: string;
   buttonLabelText: string;
   buttonClickFunction?: () => any;
 }
 
-const SettingsBtn: React.FC<SettingsBtnProps> = ({
+const BtnComponent: React.FC<BtnComponentProps> = ({
   type,
   buttonTheme,
   buttonLabelText,
@@ -17,7 +17,7 @@ const SettingsBtn: React.FC<SettingsBtnProps> = ({
   return (
     <Button
       display={"flex"}
-      w={"160px"}
+      minW={"140px"}
       my={"5px"}
       colorScheme={buttonTheme}
       type={type}
@@ -28,4 +28,4 @@ const SettingsBtn: React.FC<SettingsBtnProps> = ({
   );
 };
 
-export default SettingsBtn;
+export default BtnComponent;
