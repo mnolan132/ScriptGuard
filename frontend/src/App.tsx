@@ -32,13 +32,6 @@ const App = () => {
   const [vulnerabilityReport, setVulnerabilityReport] =
     useState<VulnerabilityReport>({});
 
-  // useEffect(() => {
-  //   fetchUser();
-  //   checkSession();
-  //   fetchUser();
-  //   checkDarkMode();
-  // }, [sessionCookie]);
-
   useEffect(() => {
     if (sessionCookie) {
       fetchUser();

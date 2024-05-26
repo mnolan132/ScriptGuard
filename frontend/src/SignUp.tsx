@@ -10,7 +10,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface SignUpProps {
   darkMode: boolean;
@@ -25,11 +25,9 @@ const SignUp: React.FC<SignUpProps> = ({ darkMode }) => {
   const [tempPassword, setTempPassword] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [show, setShow] = useState(false);
-  // Hook to handle checkbox funcitonality
+  const toast = useToast();
 
   const showPassword = () => setShow(!show);
-
-  const toast = useToast();
 
   const createNewUser = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
@@ -45,10 +43,17 @@ const SignUp: React.FC<SignUpProps> = ({ darkMode }) => {
       });
       return;
     }
-    if (isChecked) {
-      setIsDeveloper("true");
-    }
-    let data = { firstName, lastName, email, password, isDeveloper };
+    const developerStatus = isChecked ? "true" : "false";
+    setIsDeveloper(developerStatus);
+
+    const data = {
+      firstName,
+      lastName,
+      email,
+      password,
+      isDeveloper: developerStatus,
+    };
+    console.log(data);
     document.cookie = "session=" + JSON.stringify(data);
     const url = "http://127.0.0.1:5000/create_user";
     const options = {
