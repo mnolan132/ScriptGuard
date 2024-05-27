@@ -6,6 +6,7 @@ interface BtnComponentProps {
   buttonTheme: string;
   buttonLabelText: string;
   buttonClickFunction?: () => any;
+  scanFunction?: () => Promise<void>;
 }
 
 const BtnComponent: React.FC<BtnComponentProps> = ({
@@ -13,7 +14,15 @@ const BtnComponent: React.FC<BtnComponentProps> = ({
   buttonTheme,
   buttonLabelText,
   buttonClickFunction,
+  scanFunction,
 }) => {
+  const handleClick = async () => {
+    if (buttonClickFunction) {
+      buttonClickFunction();
+    } else if (scanFunction) {
+      await scanFunction();
+    }
+  };
   return (
     <Button
       display={"flex"}
@@ -21,7 +30,7 @@ const BtnComponent: React.FC<BtnComponentProps> = ({
       my={"5px"}
       colorScheme={buttonTheme}
       type={type}
-      onClick={buttonClickFunction}
+      onClick={handleClick}
     >
       {buttonLabelText}
     </Button>

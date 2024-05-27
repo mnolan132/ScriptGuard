@@ -95,55 +95,55 @@ const App = () => {
     }
   };
 
-  const scan = async () => {
-    chrome.tabs.query(
-      { active: true, currentWindow: true },
-      async function (tabs: { url: string }[]) {
-        const url = tabs[0].url;
-        const data = { url };
+  // const scan = async () => {
+  //   chrome.tabs.query(
+  //     { active: true, currentWindow: true },
+  //     async function (tabs: { url: string }[]) {
+  //       const url = tabs[0].url;
+  //       const data = { url };
 
-        const options = {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data), // Stringify the object containing the URL
-        };
+  //       const options = {
+  //         method: "POST",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify(data), // Stringify the object containing the URL
+  //       };
 
-        try {
-          const response = await fetch(
-            "http://127.0.0.1:5000/basic_scan",
-            options
-          );
-          if (response.status !== 200) {
-            const responseData = await response.json();
-            alert(responseData.message);
-          } else {
-            console.log(response.formData);
-            const responseData = await response.json();
-            setVulnerabilityReport(responseData);
-            console.log(responseData.message);
-            setHasScanned(true);
-            if (
-              (responseData.xss &&
-                responseData.xss === "XSS threats detected") ||
-              (responseData.sql &&
-                responseData.sql === "SQL Injection vulnerability detected")
-            ) {
-              setThreatDetected(true);
-            } else if (
-              (responseData.xss && responseData.xss !== null) ||
-              (responseData.sql && responseData.sql !== null)
-            ) {
-              setThreatDetected(false);
-            } else {
-              setThreatDetected(null);
-            }
-          }
-        } catch (error) {
-          console.error("Error:", error);
-        }
-      }
-    );
-  };
+  //       try {
+  //         const response = await fetch(
+  //           "http://127.0.0.1:5000/basic_scan",
+  //           options
+  //         );
+  //         if (response.status !== 200) {
+  //           const responseData = await response.json();
+  //           alert(responseData.message);
+  //         } else {
+  //           console.log(response.formData);
+  //           const responseData = await response.json();
+  //           setVulnerabilityReport(responseData);
+  //           console.log(responseData.message);
+  //           setHasScanned(true);
+  //           if (
+  //             (responseData.xss &&
+  //               responseData.xss === "XSS threats detected") ||
+  //             (responseData.sql &&
+  //               responseData.sql === "SQL Injection vulnerability detected")
+  //           ) {
+  //             setThreatDetected(true);
+  //           } else if (
+  //             (responseData.xss && responseData.xss !== null) ||
+  //             (responseData.sql && responseData.sql !== null)
+  //           ) {
+  //             setThreatDetected(false);
+  //           } else {
+  //             setThreatDetected(null);
+  //           }
+  //         }
+  //       } catch (error) {
+  //         console.error("Error:", error);
+  //       }
+  //     }
+  //   );
+  // };
 
   const bgColor = darkMode ? "#404258" : "#FBFAF5";
   const textColor = darkMode ? "whitesmoke" : "#404258";
@@ -179,11 +179,13 @@ const App = () => {
         ) : (
           <Scan
             hasScanned={hasScanned}
-            scan={scan}
             darkMode={darkMode}
             user={user}
             setUser={setUser}
             checkSession={checkSession}
+            setVulnerabilityReport={setVulnerabilityReport}
+            setHasScanned={setHasScanned}
+            setThreatDetected={setThreatDetected}
           />
         )}
 

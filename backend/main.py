@@ -7,11 +7,13 @@ from sql_scan import scan_sql_injection
 from extract import crawl
 import uuid
 
+user_not_found = "User not found"
+
 @app.route("/user/<string:user_id>", methods=["GET"])
 def get_user(user_id):
     user = User.query.get(user_id)
     if not user:
-        return jsonify({"message": "User not found"}), 404
+        return jsonify({"message": user_not_found}), 404
 
     return jsonify({
         "id": user.id,
@@ -75,7 +77,7 @@ def update_user(user_id):
     user = User.query.get(user_id)
 
     if not user:
-        return jsonify({"message": "User not found"}), 404
+        return jsonify({"message": user_not_found}), 404
     
     data = request.json
     user.first_name = data.get("first_name", user.first_name)
@@ -91,7 +93,7 @@ def delete_user(user_id):
     user = User.query.get(user_id)
 
     if not user:
-        return jsonify({"message": "User not found"}), 404
+        return jsonify({"message": user_not_found}), 404
 
     db.session.delete(user)
     db.session.commit()
@@ -118,14 +120,32 @@ def basic_scan():
         }), 200
 
 
-@app.route("/deep-scan", methods=["GET"])
+@app.route("/deep_scan", methods=["POST"])
 def deep_scan():
-    url = request.json.get("url")
-    internal_urls = crawl(url)
+    if request.method == "OPTIONS":
+        # Handle CORS preflight request
+        response = jsonify({"message": "CORS preflight request successful"})
+        response.headers.add("Access-Control-Allow-Methods", "POST")
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type")
+        return response
 
-    for internal_url in internal_urls:
-        scan_xss(internal_url)
-        scan_sql_injection(internal_url)
+    if request.method == "POST":
+        url = request.json.get("url")
+        internal_urls = crawl(url)
+        
+        xss_scan_results = ""
+        sql_injection_scan_results = ""
+
+        for internal_url in internal_urls:
+            xss_scan_results += scan_xss(internal_url)
+            sql_injection_scan_results += scan_sql_injection(internal_url)
+        
+        return jsonify({
+            "message": "this function was successful",
+            "xss": xss_scan_results,
+            "sql": sql_injection_scan_results
+        }), 200
+
         
 
 if __name__ == "__main__":

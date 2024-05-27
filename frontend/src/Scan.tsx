@@ -21,6 +21,11 @@ import {
 import { SettingsIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 import BtnComponent from "./BtnComponent";
+import scan from "./ScanFunction";
+
+interface VulnerabilityReport {
+  [key: string]: string;
+}
 
 interface User {
   email: string;
@@ -31,20 +36,26 @@ interface User {
 }
 
 interface ScanProps {
-  scan: () => void;
   hasScanned: boolean;
+  setHasScanned: React.Dispatch<React.SetStateAction<boolean>>;
   darkMode: boolean;
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   checkSession: () => boolean;
+  setVulnerabilityReport: React.Dispatch<
+    React.SetStateAction<VulnerabilityReport>
+  >;
+  setThreatDetected: React.Dispatch<React.SetStateAction<boolean | null>>;
 }
 
 const Scan: React.FC<ScanProps> = ({
-  scan,
   hasScanned,
   user,
   setUser,
   checkSession,
+  setVulnerabilityReport,
+  setHasScanned,
+  setThreatDetected,
 }) => {
   const [formData, setFormData] = useState<User | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -142,6 +153,24 @@ const Scan: React.FC<ScanProps> = ({
     deleteUser(userId);
   };
 
+  const handleBasicScan = async () => {
+    await scan(
+      setVulnerabilityReport,
+      setHasScanned,
+      setThreatDetected,
+      "http://127.0.0.1:5000/basic_scan"
+    );
+  };
+
+  const handleDeepScan = async () => {
+    await scan(
+      setVulnerabilityReport,
+      setHasScanned,
+      setThreatDetected,
+      "http://127.0.0.1:5000/deep_scan"
+    );
+  };
+
   return (
     <Box>
       <Box display={hasScanned ? "none" : "block"}>
@@ -154,7 +183,7 @@ const Scan: React.FC<ScanProps> = ({
           <BtnComponent
             buttonTheme="teal"
             buttonLabelText="SCAN"
-            buttonClickFunction={scan}
+            scanFunction={handleBasicScan}
           />
           <Text fontSize={"xl"}>Scan the page for vulnerabilities</Text>
         </Flex>
@@ -168,7 +197,7 @@ const Scan: React.FC<ScanProps> = ({
           <BtnComponent
             buttonTheme="purple"
             buttonLabelText="Deep Scan"
-            buttonClickFunction={scan}
+            scanFunction={handleDeepScan}
           />
 
           <Text fontSize={"xl"}>Scan the whole site for vulnerabilities</Text>

@@ -73,14 +73,14 @@ const Login: React.FC<LoginProps> = ({ darkMode, checkSession, fetchUser }) => {
         flexDirection={"column"}
         justifyContent={"start"}
       >
-        <FormControl isRequired w="300px" m={"10px"}>
+        <FormControl isRequired w="300px">
           <Input
             placeholder="Email address"
             value={email}
             onChange={(event) => setEmail(event.currentTarget.value)}
           />
         </FormControl>
-        <Stack spacing={4} w="300px" m="10px">
+        <Stack spacing={4} w="300px" my="10px">
           <InputGroup>
             <FormControl isRequired>
               <Input
