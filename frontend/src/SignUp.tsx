@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useState } from "react";
+import BtnComponent from "./BtnComponent";
 
 interface SignUpProps {
   darkMode: boolean;
@@ -170,18 +171,11 @@ const SignUp: React.FC<SignUpProps> = ({ darkMode }) => {
             </Flex>
           </FormControl>
 
-          <Button
-            w={"160px"}
-            border={"3px solid #56F3FD"}
-            variant={"outline"}
-            color={darkMode ? "whitesmoke" : "#404258"}
-            _hover={{
-              background: darkMode ? "#09b5b5" : "#defcfc",
-            }}
+          <BtnComponent
             type="submit"
-          >
-            Submit
-          </Button>
+            buttonTheme="blue"
+            buttonLabelText="Create Account"
+          />
         </Flex>
       </form>
     </div>

@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import BtnComponent from "./BtnComponent";
 
 interface LoginProps {
   darkMode: boolean;
@@ -108,19 +109,12 @@ const Login: React.FC<LoginProps> = ({ darkMode, checkSession, fetchUser }) => {
         </Stack>
 
         {error && <FormErrorMessage>{error}</FormErrorMessage>}
-        <Button
-          m={"10px"}
-          w={"160px"}
-          border={"3px solid #56F3FD"}
-          variant={"outline"}
-          color={darkMode ? "whitesmoke" : "#404258"}
-          _hover={{
-            background: darkMode ? "#09b5b5" : "#defcfc",
-          }}
+
+        <BtnComponent
           type="submit"
-        >
-          Login
-        </Button>
+          buttonTheme="blue"
+          buttonLabelText="Log In"
+        />
       </Flex>
     </form>
   );
