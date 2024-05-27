@@ -3,7 +3,6 @@ from urllib.parse import urlparse, urljoin
 from bs4 import BeautifulSoup
 import colorama
 
-
 # init the colorama module
 colorama.init()
 GREEN = colorama.Fore.GREEN
@@ -18,10 +17,9 @@ external_urls = set()
 # function to validate URLs (not all links in <a> tags are valid)
 def is_valid(url):
     parsed = urlparse(url)
-    return bool(parsed.netloc) and bool(parsed.scheme)
+    return bool(parsed.netloc) and bool(parsed.scheme) and parsed.scheme in ["http", "https"]
 
-
-# function to return all valid URLS that belong to the same website:
+# function to return all valid URLs that belong to the same website:
 def get_all_website_links(url):
     # all URLs of 'url'
     urls = set()
@@ -32,7 +30,7 @@ def get_all_website_links(url):
     for a_tag in soup.findAll("a"):
         href = a_tag.attrs.get("href")
         if href == "" or href is None:
-            #href empty tag
+            # href empty tag
             continue
 
         # join the URL if it's relative (not absolute link)
@@ -44,6 +42,7 @@ def get_all_website_links(url):
 
         if not is_valid(href):
             # not a valid URL
+            print(f"{GRAY}[!] Invalid URL skipped: {href}{RESET}")
             continue
         if href in internal_urls:
             # already in the set 
@@ -59,7 +58,6 @@ def get_all_website_links(url):
         internal_urls.add(href)
     return urls
 
-
 total_urls_visited = 0 
 
 def crawl(url, max_urls=30):
@@ -69,14 +67,15 @@ def crawl(url, max_urls=30):
     total_urls_visited += 1
     print(f"{YELLOW}[*] Crawling: {url}{RESET}")
     links = get_all_website_links(url)
-    for _ in links:
+    for link in links:
         if total_urls_visited > max_urls:
             break
+        if link not in internal_urls:
+            crawl(link, max_urls=max_urls)
     return internal_urls
 
-
+# # For testing purposes
 # if __name__ == "__main__":
-
 #     url = "https://www.thepythoncode.com"
 #     max_urls = 30
 #     domain_name = urlparse(url).netloc
@@ -85,7 +84,7 @@ def crawl(url, max_urls=30):
 #     print("[+] Total Internal links:", len(internal_urls))
 #     print("[+] Total External links:", len(external_urls))
 #     print("[+] Total URLs:", len(external_urls) + len(internal_urls))
-#     print("[+] Total crawled URLs:", max_urls)
+#     print("[+] Total crawled URLs:", total_urls_visited)
 
 #     # save the internal links to a file
 #     with open(f"internal_links.txt", "w") as f:
@@ -96,4 +95,3 @@ def crawl(url, max_urls=30):
 #     with open(f"external_links.txt", "w") as f:
 #         for external_link in external_urls:
 #             print(external_link.strip(), file=f)
-#^^^^the above code is for testing purposes

@@ -1,4 +1,5 @@
 from flask import request, jsonify
+import requests
 from werkzeug.security import check_password_hash, generate_password_hash
 from config import app, db
 from models import User
@@ -133,18 +134,43 @@ def deep_scan():
         url = request.json.get("url")
         internal_urls = crawl(url)
         
-        xss_scan_results = ""
-        sql_injection_scan_results = ""
+        xss_scan_results = set()
+        sql_injection_scan_results = set()
 
         for internal_url in internal_urls:
-            xss_scan_results += scan_xss(internal_url)
-            sql_injection_scan_results += scan_sql_injection(internal_url)
+            try:
+                xss_scan_result = scan_xss(internal_url)
+                xss_scan_results.add(xss_scan_result)
+            except requests.exceptions.RequestException as e:
+                print(f"Error scanning {internal_url} for XSS: {e}")
+                continue
+
+            try:
+                sql_injection_scan_result = scan_sql_injection(internal_url)
+                sql_injection_scan_results.add(sql_injection_scan_result)
+            except requests.exceptions.RequestException as e:
+                print(f"Error scanning {internal_url} for SQL Injection: {e}")
+                continue
+
+        result_of_xss_scan = "No XSS threats were detected"
+        result_of_sqli_scan = "No SQL Injection vulnerability detected"
+
+        for item in list(xss_scan_results):
+            if item == "XSS threats detected":
+                result_of_xss_scan = item
+                break
+            
+        for item in list(sql_injection_scan_results):
+            if item == "SQL Injection vulnerability detected":
+                result_of_sqli_scan = item
+                break
         
         return jsonify({
-            "message": "this function was successful",
-            "xss": xss_scan_results,
-            "sql": sql_injection_scan_results
+            "message": "Deep scan completed successfully",
+            "xss": result_of_xss_scan,
+            "sql": result_of_sqli_scan
         }), 200
+
 
         
 
