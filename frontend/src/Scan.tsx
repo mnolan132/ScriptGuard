@@ -17,6 +17,7 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
+  Skeleton,
 } from "@chakra-ui/react";
 import { SettingsIcon } from "@chakra-ui/icons";
 import { useState } from "react";
@@ -59,6 +60,7 @@ const Scan: React.FC<ScanProps> = ({
 }) => {
   const [formData, setFormData] = useState<User | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isLoaded, setIsLoaded] = useState(true);
 
   const toast = useToast();
 
@@ -158,7 +160,8 @@ const Scan: React.FC<ScanProps> = ({
       setVulnerabilityReport,
       setHasScanned,
       setThreatDetected,
-      "http://127.0.0.1:5000/basic_scan"
+      "http://127.0.0.1:5000/basic_scan",
+      setIsLoaded
     );
   };
 
@@ -167,12 +170,13 @@ const Scan: React.FC<ScanProps> = ({
       setVulnerabilityReport,
       setHasScanned,
       setThreatDetected,
-      "http://127.0.0.1:5000/deep_scan"
+      "http://127.0.0.1:5000/deep_scan",
+      setIsLoaded
     );
   };
 
   return (
-    <Box>
+    <Skeleton isLoaded={isLoaded}>
       <Box display={hasScanned ? "none" : "block"}>
         <Flex
           flexDirection={"row"}
@@ -300,7 +304,7 @@ const Scan: React.FC<ScanProps> = ({
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </Box>
+    </Skeleton>
   );
 };
 

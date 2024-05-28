@@ -4,7 +4,8 @@ const scan = async (
   setVulnerabilityReport: (arg0: any) => void,
   setHasScanned: (arg0: boolean) => void,
   setThreatDetected: (arg0: boolean | null) => void,
-  fetchUrl: string
+  fetchUrl: string,
+  setIsLoaded: (arg0: boolean) => void
 ) => {
   chrome.tabs.query(
     { active: true, currentWindow: true },
@@ -19,6 +20,7 @@ const scan = async (
       };
 
       try {
+        setIsLoaded(false);
         const response = await fetch(fetchUrl, options);
         if (response.status !== 200) {
           const responseData = await response.json();
