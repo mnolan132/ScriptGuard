@@ -23,6 +23,7 @@ import { SettingsIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 import BtnComponent from "./BtnComponent";
 import scan from "./ScanFunction";
+import { capataliseFirstLetter } from "./utils";
 
 interface VulnerabilityReport {
   [key: string]: string;
@@ -121,11 +122,12 @@ const Scan: React.FC<ScanProps> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    const capatalisedValue = capataliseFirstLetter(value);
     setFormData(
       (prevData: User | null) =>
         ({
           ...(prevData || {}), // Ensure prevData is not null
-          [name]: value || "", // Ensure value is always a string
+          [name]: capatalisedValue || "", // Ensure value is always a string
         } as User | null)
     ); // Explicitly specify the return type
   };
@@ -238,6 +240,7 @@ const Scan: React.FC<ScanProps> = ({
                 onChange={handleChange}
               />
               <Input
+                type="email"
                 name="email"
                 my={"5px"}
                 defaultValue={user?.email}

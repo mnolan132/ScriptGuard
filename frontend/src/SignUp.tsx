@@ -12,6 +12,7 @@ import {
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 import BtnComponent from "./BtnComponent";
+import { validateEmail, capataliseFirstLetter } from "./utils";
 
 interface SignUpProps {
   darkMode: boolean;
@@ -31,6 +32,20 @@ const SignUp: React.FC<SignUpProps> = ({ darkMode }) => {
 
   const createNewUser = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
+
+    if (!validateEmail(email)) {
+      toast({
+        title: "Email address invalid",
+        description:
+          "Your email address is invalid, please check the email address and try agin",
+        status: "warning",
+        position: "top",
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
+
     if (tempPassword !== password) {
       toast({
         title: "Confirmation password error",
@@ -88,13 +103,17 @@ const SignUp: React.FC<SignUpProps> = ({ darkMode }) => {
           <FormControl isRequired w="300px">
             <Input
               placeholder="First name"
-              onChange={(event) => setFirstName(event.currentTarget.value)}
+              onChange={(event) =>
+                setFirstName(capataliseFirstLetter(event.currentTarget.value))
+              }
             />
           </FormControl>
           <FormControl isRequired w="300px">
             <Input
               placeholder="Last name"
-              onChange={(event) => setLastName(event.currentTarget.value)}
+              onChange={(event) =>
+                setLastName(capataliseFirstLetter(event.currentTarget.value))
+              }
             />
           </FormControl>
           <FormControl isRequired w="300px">
