@@ -28,6 +28,9 @@ const Login: React.FC<LoginProps> = ({ darkMode, checkSession, fetchUser }) => {
 
   const showPassword = () => setShow(!show);
 
+  const iconColor = darkMode ? "whitesmoke" : "#404258";
+  const dynamicButtonTextColor = !darkMode ? "whitesmoke" : "#404258";
+
   const toast = useToast();
 
   const login = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -95,13 +98,13 @@ const Login: React.FC<LoginProps> = ({ darkMode, checkSession, fetchUser }) => {
                 size="sm"
                 onClick={showPassword}
                 m="3px"
-                backgroundColor={!darkMode ? "whitesmoke" : "#404258"}
+                backgroundColor={dynamicButtonTextColor}
                 _hover={{ bg: "none" }}
               >
                 {show ? (
-                  <ViewOffIcon color={darkMode ? "whitesmoke" : "#404258"} />
+                  <ViewOffIcon color={iconColor} />
                 ) : (
-                  <ViewIcon color={darkMode ? "whitesmoke" : "#404258"} />
+                  <ViewIcon color={iconColor} />
                 )}
               </Button>
             </InputRightElement>
