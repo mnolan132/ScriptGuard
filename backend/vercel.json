@@ -5,6 +5,36 @@
       "use": "@vercel/python"
     }
   ],
+  "routes": [
+    {
+      "src": "/create_user",
+      "dest": "/main.py"
+    },
+    {
+      "src": "/login",
+      "dest": "/main.py"
+    },
+    {
+      "src": "/user/*",
+      "dest": "/main.py"
+    },
+    {
+      "src": "/update_user/*",
+      "dest": "/main.py"
+    },
+    {
+      "src": "/delete_user/*",
+      "dest": "/main.py"
+    },
+    {
+      "src": "/basic_scan",
+      "dest": "/main.py"
+    },
+    {
+      "src": "/deep_scan",
+      "dest": "/main.py"
+    }
+  ],
   "env": {
     "PYTHON_VERSION": "3.12"
   }

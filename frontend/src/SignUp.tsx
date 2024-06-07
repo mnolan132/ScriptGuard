@@ -69,7 +69,8 @@ const SignUp: React.FC<SignUpProps> = ({ darkMode }) => {
     };
     console.log(data);
     document.cookie = "session=" + JSON.stringify(data);
-    const url = "http://127.0.0.1:5000/create_user";
+    const url =
+      "https://script-guard-nbjx-git-main-mnolan132s-projects.vercel.app/create_user";
     const options = {
       method: "POST",
       headers: { "Content-Type": "application/json" },

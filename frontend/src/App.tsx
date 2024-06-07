@@ -72,7 +72,7 @@ const App = () => {
     const cleanSessionCookie = sessionCookie.replace(/^"|"$/g, ""); // Remove surrounding double quotes
     try {
       const response = await fetch(
-        `http://127.0.0.1:5000/user/${cleanSessionCookie}`
+        `https://script-guard-nbjx-git-main-mnolan132s-projects.vercel.app/user/${cleanSessionCookie}`
       );
       if (!response.ok) {
         console.error("Failed to fetch user data");
