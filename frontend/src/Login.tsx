@@ -36,13 +36,10 @@ const Login: React.FC<LoginProps> = ({ darkMode, checkSession, fetchUser }) => {
   const login = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "https://script-guard-nbjx-git-main-mnolan132s-projects.vercel.app/login",
-        {
-          email,
-          password,
-        }
-      );
+      const response = await axios.post("http://127.0.0.1:5000/login", {
+        email,
+        password,
+      });
       document.cookie = "session=" + JSON.stringify(response.data.id);
       checkSession();
       fetchUser();

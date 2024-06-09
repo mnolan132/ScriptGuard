@@ -71,7 +71,7 @@ const Scan: React.FC<ScanProps> = ({
 
     try {
       const response = await fetch(
-        `https://script-guard-nbjx-git-main-mnolan132s-projects.vercel.app/update_user/${user.id}`,
+        `http://127.0.0.1:5000/update_user/${user.id}`,
         {
           method: "PATCH",
           headers: {
@@ -106,9 +106,7 @@ const Scan: React.FC<ScanProps> = ({
   // Function to fetch user data
   const fetchUser = async (userId: string) => {
     try {
-      const response = await fetch(
-        `https://script-guard-nbjx-git-main-mnolan132s-projects.vercel.app/user/${userId}`
-      );
+      const response = await fetch(`http://127.0.0.1:5000/user/${userId}`);
       if (response.ok) {
         const userData = await response.json();
         return userData;
@@ -140,7 +138,7 @@ const Scan: React.FC<ScanProps> = ({
         method: "DELETE",
       };
       const response = await fetch(
-        `https://script-guard-nbjx-git-main-mnolan132s-projects.vercel.app/delete_user/${userId}`,
+        `http://127.0.0.1:5000/delete_user/${userId}`,
         options
       );
       if (response.status === 200) {
@@ -164,7 +162,7 @@ const Scan: React.FC<ScanProps> = ({
       setVulnerabilityReport,
       setHasScanned,
       setThreatDetected,
-      "https://script-guard-nbjx-git-main-mnolan132s-projects.vercel.app/basic_scan",
+      "http://127.0.0.1:5000/basic_scan",
       setIsLoaded
     );
   };
@@ -174,7 +172,7 @@ const Scan: React.FC<ScanProps> = ({
       setVulnerabilityReport,
       setHasScanned,
       setThreatDetected,
-      "https://script-guard-nbjx-git-main-mnolan132s-projects.vercel.app/deep_scan",
+      "http://127.0.0.1:5000/deep_scan",
       setIsLoaded
     );
   };
