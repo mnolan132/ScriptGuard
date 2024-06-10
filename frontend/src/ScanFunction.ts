@@ -1,6 +1,8 @@
+// this declaration is essential to be abnle to get the URL of the users current active tab
 declare let chrome: any;
 
 const scan = async (
+  // Funciton arguments and type declarations
   setVulnerabilityReport: (arg0: any) => void,
   setHasScanned: (arg0: boolean) => void,
   setThreatDetected: (arg0: boolean | null) => void,
@@ -8,6 +10,7 @@ const scan = async (
   setIsLoaded: (arg0: boolean) => void
 ) => {
   chrome.tabs.query(
+    //Saves the tab URL
     { active: true, currentWindow: true },
     async function (tabs: { url: string }[]) {
       const url = tabs[0].url;

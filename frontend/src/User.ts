@@ -1,3 +1,5 @@
+//User class
+
 export class User {
   email: string;
   first_name: string;

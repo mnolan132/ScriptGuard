@@ -30,6 +30,7 @@ const SignUp: React.FC<SignUpProps> = ({ darkMode }) => {
 
   const showPassword = () => setShow(!show);
 
+  //Sends create user request to the server
   const createNewUser = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
 

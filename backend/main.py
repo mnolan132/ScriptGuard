@@ -8,9 +8,9 @@ from sql_scan import scan_sql_injection
 from extract import crawl
 import uuid
 
-user_not_found = "User not found"
+user_not_found = "User not found" #re-useable code as this required throughout this file
 
-@app.route("/user/<string:user_id>", methods=["GET"])
+@app.route("/user/<string:user_id>", methods=["GET"]) #returns a user to the frontend in JSON format
 def get_user(user_id):
     user = User.query.get(user_id)
     if not user:
@@ -25,7 +25,7 @@ def get_user(user_id):
     }), 200
 
 
-@app.route("/create_user", methods=["POST"])
+@app.route("/create_user", methods=["POST"]) #Creates a new user from information passed from the frontend and saves to the database
 def create_new_user():
     first_name = request.json.get("firstName")
     last_name = request.json.get("lastName")
@@ -40,7 +40,7 @@ def create_new_user():
         )
     
     user_id = str(uuid.uuid4())
-    hashed_password = generate_password_hash(password)
+    hashed_password = generate_password_hash(password) #password is encrypted
 
     new_user = User(id=user_id, first_name=first_name, last_name=last_name, email=email, password=hashed_password, is_developer=is_developer)
 
@@ -52,7 +52,7 @@ def create_new_user():
     
     return jsonify({"message": "User Created!"}), 201
 
-@app.route("/login", methods=["POST"])
+@app.route("/login", methods=["POST"]) #validates credentials entered in the frontend and returns validated user information 
 def login():
     email = request.json.get("email")
     password = request.json.get("password")
@@ -73,7 +73,7 @@ def login():
         "is_developer": user.is_developer
     }), 200
 
-@app.route("/update_user/<string:user_id>", methods=["PATCH"])
+@app.route("/update_user/<string:user_id>", methods=["PATCH"]) #updates user information. User info is indexed by the user_id, which is unique
 def update_user(user_id):
     user = User.query.get(user_id)
 
@@ -89,7 +89,7 @@ def update_user(user_id):
     db.session.commit()
     return jsonify({"message": "User updated", }), 200
 
-@app.route("/delete_user/<string:user_id>", methods=["DELETE"])
+@app.route("/delete_user/<string:user_id>", methods=["DELETE"]) #removed user information from the database. Indexed by user_id
 def delete_user(user_id):
     user = User.query.get(user_id)
 
@@ -101,7 +101,7 @@ def delete_user(user_id):
 
     return jsonify({"message": "User deleted!"}), 200
 
-@app.route("/basic_scan", methods=["POST"])
+@app.route("/basic_scan", methods=["POST"]) #runs the scan functions and returns the findings to the frontend
 def basic_scan():
     if request.method == "OPTIONS":
         # Handle CORS preflight request
@@ -121,7 +121,7 @@ def basic_scan():
         }), 200
 
 
-@app.route("/deep_scan", methods=["POST"])
+@app.route("/deep_scan", methods=["POST"]) #runs the crawl function to search for internal linked and then loops the scan functions over these links, returning information to the frontend
 def deep_scan():
     if request.method == "OPTIONS":
         # Handle CORS preflight request

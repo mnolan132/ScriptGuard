@@ -74,24 +74,4 @@ def crawl(url, max_urls=30):
             crawl(link, max_urls=max_urls)
     return internal_urls
 
-# # For testing purposes
-# if __name__ == "__main__":
-#     url = "https://www.thepythoncode.com"
-#     max_urls = 30
-#     domain_name = urlparse(url).netloc
-#     crawl(url, max_urls=max_urls)
 
-#     print("[+] Total Internal links:", len(internal_urls))
-#     print("[+] Total External links:", len(external_urls))
-#     print("[+] Total URLs:", len(external_urls) + len(internal_urls))
-#     print("[+] Total crawled URLs:", total_urls_visited)
-
-#     # save the internal links to a file
-#     with open(f"internal_links.txt", "w") as f:
-#         for internal_link in internal_urls:
-#             print(internal_link.strip(), file=f)
-
-#     # save the external links to a file
-#     with open(f"external_links.txt", "w") as f:
-#         for external_link in external_urls:
-#             print(external_link.strip(), file=f)

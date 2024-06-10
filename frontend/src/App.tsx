@@ -22,6 +22,7 @@ interface VulnerabilityReport {
 
 declare let chrome: any;
 const App = () => {
+  //State variables, these are the global state variables (as this is the parent component for the rest of the app)
   const [darkMode, setDarkMode] = useState(false);
   const [threatDetected, setThreatDetected] = useState<null | boolean>(null);
   const [hasScanned, setHasScanned] = useState(false);
@@ -32,6 +33,7 @@ const App = () => {
   const [vulnerabilityReport, setVulnerabilityReport] =
     useState<VulnerabilityReport>({});
 
+  //This method will run whenever sessionCookie is updated
   useEffect(() => {
     if (sessionCookie) {
       fetchUser();
@@ -39,14 +41,12 @@ const App = () => {
     checkDarkMode();
   }, [sessionCookie]);
 
+  // This method will run whenever user is updated
   useEffect(() => {
     console.log("User state updated:", user); // Log user state changes
   }, [user]);
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
-
+  // This function sets the dark mode of the app to match the users system preferences
   const checkDarkMode = () => {
     if (
       window &&
@@ -57,6 +57,12 @@ const App = () => {
     }
   };
 
+  // This function toggles darkmode
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
+  // This function will check the users cookies for a valid session
   const checkSession = () => {
     const cookie = document.cookie.substring(8);
     setSessionCookie(cookie);
@@ -64,6 +70,7 @@ const App = () => {
     return cookie !== undefined; // Return true if cookie is defined
   };
 
+  // This function is responsible for fetching user information from the backend if there is a session, and handling that data by updating the user state variable
   const fetchUser = async () => {
     if (!sessionCookie) {
       console.info("Session cookie is undefined");
@@ -95,6 +102,7 @@ const App = () => {
     }
   };
 
+  // Global styles
   const bgColor = darkMode ? "#404258" : "#FBFAF5";
   const textColor = darkMode ? "whitesmoke" : "#404258";
 

@@ -65,6 +65,7 @@ const Scan: React.FC<ScanProps> = ({
 
   const toast = useToast();
 
+  // This function submits the changes a user makes to the backend
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!formData || !user) return;
@@ -120,6 +121,7 @@ const Scan: React.FC<ScanProps> = ({
     }
   };
 
+  // This function ensures the names have a caplitalised first letter before being sent to the database
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const capatalisedValue = capataliseFirstLetter(value);
@@ -132,6 +134,7 @@ const Scan: React.FC<ScanProps> = ({
     ); // Explicitly specify the return type
   };
 
+  // Sends a delete request to the backend
   const deleteUser = async (userId: string | undefined) => {
     try {
       const options = {
@@ -157,6 +160,7 @@ const Scan: React.FC<ScanProps> = ({
     deleteUser(userId);
   };
 
+  // Sends request to run the backend to run the basic scan, function takes in the required state methods to be able to process the data (see ScanFunction.ts for how this info is handled)
   const handleBasicScan = async () => {
     await scan(
       setVulnerabilityReport,
@@ -167,6 +171,7 @@ const Scan: React.FC<ScanProps> = ({
     );
   };
 
+  // Sends request to run the backend to run the deep scan, function takes in the required state methods to be able to process the data (see ScanFunction.ts for how this info is handled)
   const handleDeepScan = async () => {
     await scan(
       setVulnerabilityReport,
